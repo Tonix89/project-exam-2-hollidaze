@@ -1,13 +1,14 @@
 import './App.css';
 import { Container } from '@mui/system';
-import Header from './components/Header';
+import Layout from './components/Layout';
 
 function App() {
   return (
     <Container maxWidth="lg" sx={{
       mt:2,
+      padding:0,
     }}>
-      <Header/>
+      <Layout/>
     </Container>
   );
 }

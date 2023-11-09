@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { Avatar, Link, Box, Typography, List, ListItem, ListItemButton, Drawer } from '@mui/material';
+import { Link, Box, Typography, List, ListItem, ListItemButton, Drawer } from '@mui/material';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import Logo from "../../logo.png";
-import { Button } from '@mui/base';
 
 const preventDefault = (e) => e.preventDefault();
 
@@ -24,7 +23,9 @@ export default function Header() {
             ml: 2,
         },
     }}>
-        <Link href="#"><img src={Logo}/></Link>
+        <Link href="#" sx={{
+            paddingLeft: "5px",
+        }}><img src={Logo}/></Link>
         <Box
             sx={{
                 display : {xs : "none", sm:"flex"},
@@ -53,7 +54,9 @@ export default function Header() {
             }}
             onClick={preventDefault}
         >
-            <MenuRoundedIcon onClick={toggleDrawer(true)}></MenuRoundedIcon>
+            <MenuRoundedIcon onClick={toggleDrawer(true)} sx={{
+            paddingRight: "5px",
+        }}></MenuRoundedIcon>
             <Drawer anchor="right" open={hamMenu} onClose={toggleDrawer(false)} elevation={5} sx={{
                         height:"200px",
                     }}>
