@@ -1,5 +1,6 @@
-import { Typography, Link } from "@mui/material";
+import { Typography} from "@mui/material";
 import { Box } from "@mui/system";
+import { NavLink } from "react-router-dom";
 
 export default function Footer() {
     return <Box sx={{
@@ -10,12 +11,17 @@ export default function Footer() {
         color: "primary",
         padding: "20px",
     }}>
-        <Typography variant="h5" sx={{
+        <Box  sx={{
+            display:"flex",
             marginBottom:"20px",
             fontWeight:"bold",
         }}>
-            Need Help? <Link href="#">Contact Us</Link>
-        </Typography>
+            Need Help? <NavLink to="/contact"><Typography sx={{
+                color:"primary.main",
+                fontWeight: "bold",
+                ml: 1,
+            }}>Contact Us</Typography></NavLink>
+        </Box>
         <Typography variant="body1" sx={{
             fontWeight:"bold",
         }}>

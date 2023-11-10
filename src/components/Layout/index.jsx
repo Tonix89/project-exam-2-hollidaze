@@ -1,6 +1,6 @@
 import Header from "../Header";
 import Footer from "../Footer";
-import { Outlet } from "@mui/icons-material";
+import { Outlet } from "react-router";
 import { Box } from "@mui/material";
 
 export default function Layout() {

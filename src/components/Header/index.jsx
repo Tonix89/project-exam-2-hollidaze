@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, Box, Typography, List, ListItem, ListItemButton, Drawer } from '@mui/material';
+import { NavLink } from 'react-router-dom';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import Logo from "../../logo.png";
 
@@ -23,9 +24,9 @@ export default function Header() {
             ml: 2,
         },
     }}>
-        <Link href="#" sx={{
+        <NavLink to="/" sx={{
             paddingLeft: "5px",
-        }}><img src={Logo}/></Link>
+        }}><img src={Logo}/></NavLink>
         <Box
             sx={{
                 display : {xs : "none", sm:"flex"},
