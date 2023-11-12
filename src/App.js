@@ -1,5 +1,4 @@
 import './App.css';
-import { Container } from '@mui/material';
 import { Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
 import Home from './components/Pages/Home';
@@ -8,18 +7,15 @@ import Contact from './components/Pages/Contact';
 
 function App() {
   return (
-    <Container maxWidth="lg" sx={{
-      mt:2,
-      padding:0,
-    }}>
-      <Routes>
-        <Route path="/" element={<Layout/>}>
-            <Route index element={<Home/>}/>
-            <Route path="/contact" element={<Contact/>} />
-            <Route path="*" element={<PageNotFound/>} />
-        </Route>
-      </Routes>
-    </Container>
+    <div className='App'>
+        <Routes>
+          <Route path="/" element={<Layout/>}>
+              <Route index element={<Home/>}/>
+              <Route path="/contact" element={<Contact/>} />
+              <Route path="*" element={<PageNotFound/>} />
+          </Route>
+        </Routes>
+    </div>
   );
 }
 

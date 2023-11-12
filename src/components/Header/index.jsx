@@ -3,6 +3,7 @@ import { Link, Box, Typography, List, ListItem, ListItemButton, Drawer } from '@
 import { NavLink } from 'react-router-dom';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import Logo from "../../logo.png";
+import { Container } from '@mui/system';
 
 const preventDefault = (e) => e.preventDefault();
 
@@ -16,21 +17,21 @@ export default function Header() {
           setHamMenu(open);
     }
 
-    return <Box sx={{
+    return <Container>
+        <Box sx={{
         display : "flex",
-        flexwrap: "wrap",
+        flexWrap: "wrap",
+        alignItems: "center",
+        p: 0,
         justifyContent: "space-between",
-        "& > :not(style) ~ :not(style)":{
-            ml: 2,
-        },
     }}>
         <NavLink to="/" sx={{
             paddingLeft: "5px",
-        }}><img src={Logo}/></NavLink>
+        }}><img src={Logo} alt="Logo" /></NavLink>
         <Box
             sx={{
                 display : {xs : "none", sm:"flex"},
-                flexwrap: "wrap",
+                flexWrap: "wrap",
                 justifyContent: "space-between",
                 "& > :not(style) ~ :not(style)":{
                     ml: 2,
@@ -46,7 +47,7 @@ export default function Header() {
         <Box
             sx={{
                 display : {xs : "flex", sm:"none"},
-                flexwrap: "wrap",
+                flexWrap: "wrap",
                 color:"primary",
                 justifyContent: "space-between",
                 "& > :not(style) ~ :not(style)":{
@@ -90,4 +91,5 @@ export default function Header() {
             </Drawer>
         </Box>
     </Box>
+    </Container>
 }

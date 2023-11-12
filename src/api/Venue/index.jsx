@@ -1,4 +1,3 @@
-import { async } from "q";
 import { useState, useEffect } from "react";
 
 function GetVenue(url) {

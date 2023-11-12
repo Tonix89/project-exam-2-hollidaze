@@ -1,10 +1,13 @@
-import React from "react";
-import { Backdrop, CircularProgress, Box } from "@mui/material";
+import React, { createContext} from "react";
+import { Backdrop, CircularProgress, Box, Grid } from "@mui/material";
 import GetVenue from "../../../api/Venue";
+import VenueCard from "../../Venue_card";
+
+export const VenueData = createContext();
 
 function Home() {
 
-    const {data, isLoading, isError} = GetVenue("https://api.noroff.dev/api/v1/holidaze/venues?limit=25");
+    const {data, isLoading, isError} = GetVenue("https://api.noroff.dev/api/v1/holidaze/venues?limit=15");
 
     if(isLoading){
         return (
@@ -25,10 +28,16 @@ function Home() {
         )
     }
 
-    console.log(data);
     return (
-        
-        <div>This is Home</div>
+    <Box sx={{ flexGrow: 1, mt: 1, }}>
+        <Grid  container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+        {data.map(venue => <VenueData.Provider value={venue} key={venue.id}>
+                    <Grid item xs={12} sm={4} md={4}>
+                        <VenueCard/>
+                    </Grid>
+                </VenueData.Provider>)}
+        </Grid>
+    </Box>       
     )
 };
 
