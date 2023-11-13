@@ -11,6 +11,10 @@ const theme = createTheme({
         light: {
             main: "#E4E4EB",
         },
+        grey: {
+            main: "#BDBDBD",
+        },
+
     }
 });
 

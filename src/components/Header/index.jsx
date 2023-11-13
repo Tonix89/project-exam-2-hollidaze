@@ -62,7 +62,7 @@ export default function Header() {
             <Drawer anchor="right" open={hamMenu} onClose={toggleDrawer(false)} elevation={5} sx={{
                         height:"200px",
                     }}>
-                <Box className='yes' role="presentation" onClick={toggleDrawer(false)} onKeyDown={toggleDrawer(false)}
+                <Box role="presentation" onClick={toggleDrawer(false)} onKeyDown={toggleDrawer(false)}
                 >
                     <List sx={{
                                     width:"150px",

@@ -8,8 +8,6 @@ import theme from "../../styles/theme";
 function VenueCard() {
     const data = useContext(VenueData);
 
-    console.log(data)
-
     let city = "City";
     let country = "Country";
 
@@ -30,7 +28,7 @@ function VenueCard() {
                 <CardMedia component="img"
           height="140"
           image={data.media[0]}
-          alt={data.description} sx={{p:0.5, width: "-webkit-fill-available", borderRadius: "10px"}}/>
+          alt={data.name} sx={{p:0.5, width: "-webkit-fill-available", borderRadius: "10px"}}/>
                 <CardContent>
                     <Typography gutterBottom variant="h6" component="div"  sx={{
                     fontWeight: "bold",
