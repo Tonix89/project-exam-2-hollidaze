@@ -8,15 +8,15 @@ import { CssBaseline } from '@mui/material';
 
 function App() {
   return (
-    <div className='App'>
+    <div className="App">
       <CssBaseline>
-          <Routes>
-            <Route path="/" element={<Layout/>}>
-                <Route index element={<Home/>}/>
-                <Route path="/contact" element={<Contact/>} />
-                <Route path="*" element={<PageNotFound/>} />
-            </Route>
-          </Routes>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="*" element={<PageNotFound />} />
+          </Route>
+        </Routes>
       </CssBaseline>
     </div>
   );
