@@ -1,22 +1,28 @@
 import { useState } from 'react';
 import {
-  Link,
   Box,
-  Typography,
   List,
   ListItem,
   ListItemButton,
   Drawer,
+  Button,
 } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import Logo from '../../logo.png';
 import { Container } from '@mui/system';
+import SignUp from '../Sign_up';
 
 const preventDefault = (e) => e.preventDefault();
 
 export default function Header() {
   const [hamMenu, setHamMenu] = useState(false);
+
+  const [opens, setOpens] = useState(false);
+
+  const handleOpens = () => setOpens(true);
+
+  const handleCloses = () => setOpens(false);
 
   const toggleDrawer = (open) => (event) => {
     if (
@@ -58,12 +64,20 @@ export default function Header() {
           }}
           onClick={preventDefault}
         >
-          <Link href="#" underline="hover">
-            <Typography sx={{ fontWeight: 'bold' }}>Login</Typography>
-          </Link>
-          <Link href="#" underline="hover">
-            <Typography sx={{ fontWeight: 'bold' }}>Sign Up</Typography>
-          </Link>
+          <Button
+            onClick={handleOpens}
+            open={opens}
+            sx={{ fontWeight: 'bold' }}
+          >
+            Login
+          </Button>
+          <Button
+            onClick={handleOpens}
+            open={opens}
+            sx={{ fontWeight: 'bold' }}
+          >
+            Sign Up
+          </Button>
         </Box>
         <Box
           sx={{
@@ -102,30 +116,46 @@ export default function Header() {
                   width: '150px',
                 }}
               >
-                <ListItem>
+                <ListItem
+                  sx={{
+                    m: '0',
+                    p: '0',
+                  }}
+                >
                   <ListItemButton
                     sx={{
                       m: '0',
                       p: '0',
                     }}
                   >
-                    <Link href="#" underline="hover">
-                      <Typography sx={{ fontWeight: 'bold' }}>Login</Typography>
-                    </Link>
+                    <Button
+                      onClick={handleOpens}
+                      open={opens}
+                      sx={{ fontWeight: 'bold', pb: 0 }}
+                    >
+                      Login
+                    </Button>
                   </ListItemButton>
                 </ListItem>
-                <ListItem>
+                <ListItem
+                  sx={{
+                    m: '0',
+                    p: '0',
+                  }}
+                >
                   <ListItemButton
                     sx={{
                       m: '0',
                       p: '0',
                     }}
                   >
-                    <Link href="#" underline="hover">
-                      <Typography sx={{ fontWeight: 'bold' }}>
-                        Sign Up
-                      </Typography>
-                    </Link>
+                    <Button
+                      onClick={handleOpens}
+                      open={opens}
+                      sx={{ fontWeight: 'bold' }}
+                    >
+                      Sign Up
+                    </Button>
                   </ListItemButton>
                 </ListItem>
               </List>
@@ -133,6 +163,7 @@ export default function Header() {
           </Drawer>
         </Box>
       </Box>
+      <SignUp open={opens} handleCloses={handleCloses} />
     </Container>
   );
 }
