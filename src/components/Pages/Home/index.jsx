@@ -4,13 +4,14 @@ import GetVenue from '../../../api/Venue';
 import VenueCard from '../../Venue_card';
 import SearchBar from '../../Search_bar';
 import SortFilter from '../../Sort_filter';
+import { NavLink } from 'react-router-dom';
 
 export const VenueData = createContext();
 
 function Home() {
   const [filter, setFilter] = useState([]);
   const [apiLink, setApiLink] = useState(
-    'https://api.noroff.dev/api/v1/holidaze/venues',
+    'https://api.noroff.dev/api/v1/holidaze/venues?limit=25',
   );
   const [venueData, setVenueData] = useState([]);
 
@@ -92,7 +93,12 @@ function Home() {
         {venueData.map((venue) => (
           <VenueData.Provider value={venue} key={venue.id}>
             <Grid item xs={12} sm={4} md={4}>
-              <VenueCard />
+              <NavLink
+                to={`/venue/${venue.id}`}
+                style={{ textDecoration: 'none' }}
+              >
+                <VenueCard />
+              </NavLink>
             </Grid>
           </VenueData.Provider>
         ))}
