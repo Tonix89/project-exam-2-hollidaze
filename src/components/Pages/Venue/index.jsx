@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import theme from '../../../styles/theme';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import Availability from '../../Calendar/Availability';
 
 function SingleVenue() {
   const params = useParams();
@@ -24,8 +25,6 @@ function SingleVenue() {
     '?_owner=true&_bookings=true';
 
   const { data, isLoading, isError } = GetVenue(url);
-
-  console.log(data);
 
   if (isLoading) {
     return (
@@ -208,12 +207,16 @@ function SingleVenue() {
               </Box>
             </Box>
             <Box>
+                  <Availability data={data} />
+            </Box>
+            <Box>
               <Typography
                 gutterBottom
                 variant="h6"
                 component="div"
                 sx={{
                   fontWeight: 'bold',
+                  mt: 2,
                 }}
               >
                 Other Details :

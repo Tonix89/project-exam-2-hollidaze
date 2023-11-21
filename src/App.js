@@ -6,20 +6,25 @@ import PageNotFound from './components/Pages/PageNotFound';
 import Contact from './components/Pages/Contact';
 import SingleVenue from './components/Pages/Venue';
 import { CssBaseline } from '@mui/material';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+
 
 function App() {
   return (
     <div className="App">
-      <CssBaseline>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/venue/:id" element={<SingleVenue />} />
-            <Route path="*" element={<PageNotFound />} />
-          </Route>
-        </Routes>
-      </CssBaseline>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <CssBaseline>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/venue/:id" element={<SingleVenue />} />
+              <Route path="*" element={<PageNotFound />} />
+            </Route>
+          </Routes>
+        </CssBaseline>
+      </LocalizationProvider>
     </div>
   );
 }
