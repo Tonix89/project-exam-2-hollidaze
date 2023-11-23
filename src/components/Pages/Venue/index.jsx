@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import GetVenue from '../../../api/Venue';
-import { useParams } from 'react-router-dom';
+import { useParams, NavLink } from 'react-router-dom';
 import {
   Box,
   Card,
@@ -16,8 +16,25 @@ import {
 import theme from '../../../styles/theme';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Availability from '../../Calendar/Availability';
+import Login from '../../Login';
+import SignUp from '../../Sign_up';
 
 function SingleVenue() {
+  const [openSignup, setOpenSignup] = useState(false);
+  const signUpOpen = () => setOpenSignup(true);
+  const signUpClose = () => setOpenSignup(false);
+
+  const [openLogin, setOpenLogin] = useState(false);
+  const loginOpen = () => setOpenLogin(true);
+  const loginClose = () => setOpenLogin(false);
+
+  const token = localStorage.getItem('holiToken');
+
+  const notLoggedIn = () => {
+    alert('You must login first in order to make bookings.');
+    setOpenLogin(true);
+  };
+
   const params = useParams();
   const url =
     'https://api.noroff.dev/api/v1/holidaze/venues/' +
@@ -68,7 +85,7 @@ function SingleVenue() {
             p: 0.5,
             width: '-webkit-fill-available',
             borderRadius: '10px',
-            maxHeight: { xs: '300px', md: '600px' },
+            maxHeight: { xs: '300px', md: '500px' },
           }}
         />
         <CardContent>
@@ -207,7 +224,7 @@ function SingleVenue() {
               </Box>
             </Box>
             <Box>
-                  <Availability data={data} />
+              <Availability data={data} />
             </Box>
             <Box>
               <Typography
@@ -376,18 +393,34 @@ function SingleVenue() {
                 textAlign: 'center',
               }}
             >
-              <Button
-                type="submit"
-                variant="contained"
-                sx={{
-                  width: 150,
-                  borderRadius: '20px',
-                  fontWeight: 'bold',
-                  my: 2,
-                }}
-              >
-                Book Now
-              </Button>
+              {token ? (
+                <NavLink to={`/booking/${params.id}`}>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      width: 150,
+                      borderRadius: '20px',
+                      fontWeight: 'bold',
+                      my: 2,
+                    }}
+                  >
+                    Book Now
+                  </Button>
+                </NavLink>
+              ) : (
+                <Button
+                  variant="contained"
+                  sx={{
+                    width: 150,
+                    borderRadius: '20px',
+                    fontWeight: 'bold',
+                    my: 2,
+                  }}
+                  onClick={notLoggedIn}
+                >
+                  Book Now
+                </Button>
+              )}
             </Box>
             <Box
               sx={{
@@ -442,6 +475,12 @@ function SingleVenue() {
           </Box>
         </CardContent>
       </Card>
+      <Login open={openLogin} loginClose={loginClose} signUpOpen={signUpOpen} />
+      <SignUp
+        open={openSignup}
+        signUpClose={signUpClose}
+        loginOpen={loginOpen}
+      />
     </>
   );
 }

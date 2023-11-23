@@ -5,10 +5,10 @@ import Home from './components/Pages/Home';
 import PageNotFound from './components/Pages/PageNotFound';
 import Contact from './components/Pages/Contact';
 import SingleVenue from './components/Pages/Venue';
+import Booking from './components/Pages/Booking';
 import { CssBaseline } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 function App() {
   return (
@@ -20,6 +20,7 @@ function App() {
               <Route index element={<Home />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/venue/:id" element={<SingleVenue />} />
+              <Route path="/booking/:id" element={<Booking />} />
               <Route path="*" element={<PageNotFound />} />
             </Route>
           </Routes>
