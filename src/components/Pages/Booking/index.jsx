@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState, useMemo } from "react";
+import { useParams } from "react-router-dom";
 import {
   Box,
   Backdrop,
@@ -14,26 +14,34 @@ import {
   FormControlLabel,
   Radio,
   Button,
-} from '@mui/material';
-import GetVenue from '../../../api/Venue';
-import theme from '../../../styles/theme';
-import { NavLink } from 'react-router-dom';
-import { DatePicker } from '@mui/x-date-pickers';
-import { css } from '@mui/material';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import getTimeStamp from '../../../tools/Timestamp_array';
+} from "@mui/material";
+import GetVenue from "../../../api/Venue";
+import theme from "../../../styles/theme";
+import { NavLink } from "react-router-dom";
+import { DatePicker } from "@mui/x-date-pickers";
+import { css } from "@mui/material";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import getTimeStamp from "../../../tools/Timestamp_array";
+import { getToken } from "../../../tools/Token";
+import postApi from "../../../api/Post";
 
 function Booking() {
+  const token = getToken();
+
+  if (!token) {
+    window.location.href = "/";
+  }
+
   const customField = css({
-    '.MuiOutlinedInput-notchedOutline': {
+    ".MuiOutlinedInput-notchedOutline": {
       borderRadius: 4,
       borderWidth: 2,
       borderColor: theme.palette.primary.main,
     },
-    '.MuiFormLabel-root': {
-      fontWeight: 'bold',
+    ".MuiFormLabel-root": {
+      fontWeight: "bold",
     },
   });
 
@@ -47,17 +55,19 @@ function Booking() {
   const [dateToError, setDateToError] = useState(null);
   const [isDateTo, setIsDateTo] = useState(false);
 
-  const [paymentMethod, setPaymentMethod] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState("");
   const [paymentError, setPaymentError] = useState(false);
 
   const [daysArray, setDaysArray] = useState();
   const [calLoading, setCalLoading] = useState(false);
 
+  const [loader, setLoader] = useState(false);
+
   const params = useParams();
   const url =
-    'https://api.noroff.dev/api/v1/holidaze/venues/' +
+    "https://api.noroff.dev/api/v1/holidaze/venues/" +
     params.id +
-    '?_owner=true&_bookings=true';
+    "?_owner=true&_bookings=true";
 
   const { data, isLoading, isError } = GetVenue(url);
 
@@ -65,7 +75,7 @@ function Booking() {
     guest: yup
       .number()
       .max(data.maxGuests, `Maximum guests is only ${data.maxGuests} persons.`)
-      .typeError('Must be a number'),
+      .typeError("Must be a number"),
   });
 
   const {
@@ -93,42 +103,68 @@ function Booking() {
       setPaymentError(false);
     }
 
-    if (dateFrom && !dateFromError && dateTo && !dateToError && !paymentError) {
+    if (
+      dateFrom &&
+      !dateFromError &&
+      dateTo &&
+      !dateToError &&
+      paymentMethod &&
+      !paymentError
+    ) {
+      setLoader(true);
+      const bookingUrl = "https://api.noroff.dev/api/v1/holidaze/bookings";
+
       const bodyData = {
-        dateFrom: dateFrom['$d'].toISOString(),
-        dateTo: dateTo['$d'].toISOString(),
+        dateFrom: dateFrom["$d"].toISOString(),
+        dateTo: dateTo["$d"].toISOString(),
         guests: guests.guest,
         venueId: data.id,
       };
 
-      console.log(bodyData);
+      const options = {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bodyData),
+      };
+
+      postApi(bookingUrl, options).then((res) => {
+        if (res.created) {
+          window.location.href = "/success/createBooking";
+        } else {
+          setLoader(false);
+          alert("Sorry, we have an error registering your booking " + res);
+        }
+      });
     }
   }
 
   const dateToErrorMessage = useMemo(() => {
     switch (dateToError) {
-      case 'invalidDate': {
-        return 'Your date is not valid.';
+      case "invalidDate": {
+        return "Your date is not valid.";
       }
-      case 'disablePast': {
+      case "disablePast": {
         return "You can't choose past date.";
       }
       default: {
-        return '';
+        return "";
       }
     }
   }, [dateToError]);
 
   const dateFromErrorMessage = useMemo(() => {
     switch (dateFromError) {
-      case 'invalidDate': {
-        return 'Your date is not valid.';
+      case "invalidDate": {
+        return "Your date is not valid.";
       }
-      case 'disablePast': {
+      case "disablePast": {
         return "You can't choose past date.";
       }
       default: {
-        return '';
+        return "";
       }
     }
   }, [dateFromError]);
@@ -153,12 +189,12 @@ function Booking() {
         setCalLoading(false);
         setTimeout(() => {
           const timeStampArray = getTimeStamp(data);
-          const dayButton = document.querySelectorAll('.MuiPickersDay-root');
+          const dayButton = document.querySelectorAll(".MuiPickersDay-root");
           dayButton.forEach((button) => {
-            const timestamp = button.getAttribute('data-timestamp');
+            const timestamp = button.getAttribute("data-timestamp");
             if (timeStampArray.includes(parseInt(timestamp))) {
-              button.classList.add('Mui-disabled');
-              button.setAttribute('disabled', true);
+              button.classList.add("Mui-disabled");
+              button.setAttribute("disabled", true);
             }
           });
           setDaysArray(timeStampArray);
@@ -177,25 +213,25 @@ function Booking() {
 
     const commonStyles = {
       border: `2px solid ${theme.palette.secondary.main}`,
-      fontWeight: 'bold',
-      width: 'auto',
-      maxWidth: '320px',
+      fontWeight: "bold",
+      width: "auto",
+      maxWidth: "320px",
       m: 0,
-      '& .MuiPickersDay-today:not(.Mui-selected)': {
+      "& .MuiPickersDay-today:not(.Mui-selected)": {
         borderColor: theme.palette.secondary.main,
       },
-      '& div': { fontWeight: 'bold' },
-      '& .MuiDayCalendar-header': {
+      "& div": { fontWeight: "bold" },
+      "& .MuiDayCalendar-header": {
         backgroundColor: theme.palette.light.main,
-        width: 'auto',
+        width: "auto",
       },
-      '& .MuiTypography-root': { fontWeight: 'bolder' },
-      '& button': { fontWeight: 'bolder' },
-      '& .MuiYearCalendar-root': {
-        width: 'auto',
+      "& .MuiTypography-root": { fontWeight: "bolder" },
+      "& button": { fontWeight: "bolder" },
+      "& .MuiYearCalendar-root": {
+        width: "auto",
       },
-      '& .MuiDateCalendar-root': {
-        width: 'auto',
+      "& .MuiDateCalendar-root": {
+        width: "auto",
       },
     };
 
@@ -205,13 +241,12 @@ function Booking() {
     });
   }
 
-  if (isLoading) {
+  if (isLoading || loader) {
     return (
       <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={true}
-      >
-        <CircularProgress color="inherit" />
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={true}>
+        <CircularProgress color='inherit' />
       </Backdrop>
     );
   }
@@ -225,73 +260,68 @@ function Booking() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Card
           sx={{
-            border: '1px solid',
+            border: "1px solid",
             borderColor: theme.palette.secondary.main,
-          }}
-        >
+          }}>
           <CardMedia
-            component="img"
+            component='img'
             image={data.media[0]}
             alt={data.name}
             sx={{
               p: 0.5,
-              width: '-webkit-fill-available',
-              borderRadius: '10px',
-              maxHeight: { xs: '300px', md: '600px' },
+              width: "-webkit-fill-available",
+              borderRadius: "10px",
+              maxHeight: { xs: "300px", md: "600px" },
             }}
           />
           <CardContent>
-            <Box sx={{ width: 'fit-content' }}>
+            <Box sx={{ width: "fit-content" }}>
               <NavLink
                 to={`/venue/${params.id}`}
-                style={{ textDecoration: 'none' }}
-              >
+                style={{ textDecoration: "none" }}>
                 <Typography
                   gutterBottom
-                  variant="h6"
-                  component="div"
+                  variant='h6'
+                  component='div'
                   sx={{
-                    fontWeight: 'bold',
+                    fontWeight: "bold",
                     color: theme.palette.primary.main,
-                  }}
-                >
+                  }}>
                   {data.name}
                 </Typography>
               </NavLink>
             </Box>
-            <Box sx={{ textAlign: 'center' }}>
+            <Box sx={{ textAlign: "center" }}>
               <Box
                 sx={{
-                  display: 'flex',
+                  display: "flex",
                   gap: 2,
-                  alignItems: 'start',
-                  justifyContent: 'center',
+                  alignItems: "start",
+                  justifyContent: "center",
                   my: 3,
-                }}
-              >
-                <Box sx={{ textAlign: 'start' }}>
+                }}>
+                <Box sx={{ textAlign: "start" }}>
                   <Typography
                     gutterBottom
-                    variant="body2"
+                    variant='body2'
                     sx={{
-                      fontWeight: 'bold',
+                      fontWeight: "bold",
                       color: theme.palette.primary.main,
-                    }}
-                  >
+                    }}>
                     From
                   </Typography>
                   <DatePicker
-                    id="datefrom"
-                    label="MM/DD/YYYY"
+                    id='datefrom'
+                    label='MM/DD/YYYY'
                     disablePast
                     loading={calLoading}
-                    renderLoading={() => <CircularProgress color="inherit" />}
+                    renderLoading={() => <CircularProgress color='inherit' />}
                     defaultValue={dateFrom}
                     onChange={(value) => setDateFrom(value)}
                     onMonthChange={() => setCalLoading(true)}
                     onYearChange={() => setCalLoading(true)}
                     onOpen={() => setCalLoading(true)}
-                    orientation="portrait"
+                    orientation='portrait'
                     onError={(newError) => setDateFromError(newError)}
                     slotProps={{
                       field: {
@@ -308,47 +338,44 @@ function Booking() {
                     }}
                   />
                   <Typography
-                    variant="body2"
+                    variant='body2'
                     sx={{
-                      color: 'red',
-                      display: isDateFrom ? 'block' : 'none',
-                    }}
-                  >
+                      color: "red",
+                      display: isDateFrom ? "block" : "none",
+                    }}>
                     Choose a start date.
                   </Typography>
                 </Box>
                 <Typography
                   gutterBottom
-                  variant="h5"
+                  variant='h5'
                   sx={{
-                    fontWeight: 'bold',
+                    fontWeight: "bold",
                     color: theme.palette.primary.main,
-                    mt: '25px',
-                  }}
-                >
+                    mt: "25px",
+                  }}>
                   -
                 </Typography>
-                <Box sx={{ textAlign: 'start' }}>
+                <Box sx={{ textAlign: "start" }}>
                   <Typography
                     gutterBottom
-                    variant="body2"
+                    variant='body2'
                     sx={{
-                      fontWeight: 'bold',
+                      fontWeight: "bold",
                       color: theme.palette.primary.main,
-                    }}
-                  >
+                    }}>
                     To
                   </Typography>
                   <DatePicker
-                    id="dateto"
-                    label="MM/DD/YYYY"
+                    id='dateto'
+                    label='MM/DD/YYYY'
                     disablePast
                     defaultValue={dateTo}
                     onChange={(value) => setDateTo(value)}
                     onMonthChange={() => setCalLoading(true)}
                     onYearChange={() => setCalLoading(true)}
                     onOpen={() => setCalLoading(true)}
-                    orientation="portrait"
+                    orientation='portrait'
                     onError={(newError) => setDateToError(newError)}
                     slotProps={{
                       field: {
@@ -365,52 +392,48 @@ function Booking() {
                     }}
                   />
                   <Typography
-                    variant="body2"
-                    sx={{ color: 'red', display: isDateTo ? 'block' : 'none' }}
-                  >
+                    variant='body2'
+                    sx={{ color: "red", display: isDateTo ? "block" : "none" }}>
                     Choose an end date.
                   </Typography>
                 </Box>
               </Box>
               <Box
                 sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                }}
-              >
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}>
                 <Box
                   sx={{
-                    maxWidth: '560px',
-                    width: '-webkit-fill-available',
-                  }}
-                >
+                    maxWidth: "560px",
+                    width: "-webkit-fill-available",
+                  }}>
                   <Typography
                     gutterBottom
-                    variant="body2"
+                    variant='body2'
                     sx={{
-                      fontWeight: 'bold',
+                      fontWeight: "bold",
                       color: theme.palette.primary.main,
-                      textAlign: 'start',
-                    }}
-                  >
+                      textAlign: "start",
+                    }}>
                     Number of Guest
                   </Typography>
                 </Box>
                 <TextField
-                  {...register('guest')}
-                  id="guest"
-                  label="Required"
+                  {...register("guest")}
+                  id='guest'
+                  label='Required'
                   sx={{
-                    maxWidth: '560px',
-                    width: '-webkit-fill-available',
-                    '& .MuiOutlinedInput-notchedOutline': {
-                      border: '2px solid',
+                    maxWidth: "560px",
+                    width: "-webkit-fill-available",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      border: "2px solid",
                     },
                   }}
                 />
-                <Typography sx={{ color: 'red' }}>
-                  {' '}
+                <Typography sx={{ color: "red" }}>
+                  {" "}
                   {errors.guest?.message}
                 </Typography>
               </Box>
@@ -419,74 +442,68 @@ function Booking() {
         </Card>
         <Box
           sx={{
-            border: '1px solid',
+            border: "1px solid",
             borderColor: theme.palette.secondary.main,
             borderRadius: 1,
             mt: 3,
-            textAlign: 'center',
-          }}
-        >
+            textAlign: "center",
+          }}>
           <Typography
             gutterBottom
-            variant="h5"
+            variant='h5'
             sx={{
-              fontWeight: 'bold',
+              fontWeight: "bold",
               color: theme.palette.primary.main,
               my: 2,
-            }}
-          >
+            }}>
             Payment Info
           </Typography>
-          <Box sx={{ textAlign: 'start', p: 3 }}>
+          <Box sx={{ textAlign: "start", p: 3 }}>
             <Typography
               gutterBottom
-              variant="h6"
+              variant='h6'
               sx={{
-                fontWeight: 'bold',
+                fontWeight: "bold",
                 color: theme.palette.primary.main,
                 my: 2,
-              }}
-            >
+              }}>
               Pay With :
             </Typography>
             <FormControl sx={{ px: 4 }}>
               <RadioGroup
-                id="payment"
+                id='payment'
                 value={paymentMethod}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-              >
+                onChange={(e) => setPaymentMethod(e.target.value)}>
                 <FormControlLabel
-                  value="paypal"
+                  value='paypal'
                   control={<Radio />}
-                  label="Paypal"
-                  sx={{ '& .MuiTypography-root': { fontWeight: 'bold' } }}
+                  label='Paypal'
+                  sx={{ "& .MuiTypography-root": { fontWeight: "bold" } }}
                 />
                 <FormControlLabel
-                  value="visa"
+                  value='visa'
                   control={<Radio />}
-                  label="Visa"
-                  sx={{ '& .MuiTypography-root': { fontWeight: 'bold' } }}
+                  label='Visa'
+                  sx={{ "& .MuiTypography-root": { fontWeight: "bold" } }}
                 />
                 <FormControlLabel
-                  value="bank-transfer"
+                  value='bank-transfer'
                   control={<Radio />}
-                  label="Bank Transfer"
-                  sx={{ '& .MuiTypography-root': { fontWeight: 'bold' } }}
+                  label='Bank Transfer'
+                  sx={{ "& .MuiTypography-root": { fontWeight: "bold" } }}
                 />
               </RadioGroup>
             </FormControl>
             <Typography
-              sx={{ color: 'red', display: paymentError ? 'block' : 'none' }}
-            >
+              sx={{ color: "red", display: paymentError ? "block" : "none" }}>
               You must choose a payment method.
             </Typography>
           </Box>
-          <Box sx={{ textAlign: 'center', my: 2 }}>
+          <Box sx={{ textAlign: "center", my: 2 }}>
             <Button
-              type="submit"
-              variant="contained"
-              sx={{ width: 150, borderRadius: '20px', fontWeight: 'bold' }}
-            >
+              type='submit'
+              variant='contained'
+              sx={{ width: 150, borderRadius: "20px", fontWeight: "bold" }}>
               Pay Now
             </Button>
           </Box>

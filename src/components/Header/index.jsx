@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Box,
   List,
@@ -7,14 +7,14 @@ import {
   Drawer,
   Button,
   Typography,
-} from '@mui/material';
-import { NavLink } from 'react-router-dom';
-import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
-import Logo from '../../logo.png';
-import { Container } from '@mui/system';
-import SignUp from '../Sign_up';
-import Login from '../Login';
-import { token } from '../../tools/Token';
+} from "@mui/material";
+import { NavLink } from "react-router-dom";
+import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
+import Logo from "../../logo.png";
+import { Container } from "@mui/system";
+import SignUp from "../Sign_up";
+import Login from "../Login";
+import { getToken } from "../../tools/Token";
 
 const preventDefault = (e) => e.preventDefault();
 
@@ -31,8 +31,8 @@ export default function Header() {
 
   const toggleDrawer = (open) => (event) => {
     if (
-      event.type === 'keydown' &&
-      (event.key === 'Tab' || event.key === 'Shift')
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
     ) {
       return;
     }
@@ -43,20 +43,18 @@ export default function Header() {
     <Container>
       <Box
         sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          alignItems: 'center',
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "center",
           p: 0,
-          justifyContent: 'space-between',
-        }}
-      >
+          justifyContent: "space-between",
+        }}>
         <NavLink
-          to="/"
+          to='/'
           sx={{
-            paddingLeft: '5px',
-          }}
-        >
-          <img src={Logo} alt="Logo" />
+            paddingLeft: "5px",
+          }}>
+          <img src={Logo} alt='Logo' />
         </NavLink>
         <MenuMdScreen
           openLogin={openLogin}
@@ -66,37 +64,33 @@ export default function Header() {
         />
         <Box
           sx={{
-            display: { xs: 'flex', sm: 'none' },
-            flexWrap: 'wrap',
-            color: 'primary',
-            justifyContent: 'space-between',
-            '& > :not(style) ~ :not(style)': {
+            display: { xs: "flex", sm: "none" },
+            flexWrap: "wrap",
+            color: "primary",
+            justifyContent: "space-between",
+            "& > :not(style) ~ :not(style)": {
               ml: 2,
             },
           }}
-          onClick={preventDefault}
-        >
+          onClick={preventDefault}>
           <MenuRoundedIcon
             onClick={toggleDrawer(true)}
             sx={{
-              paddingRight: '5px',
-            }}
-          ></MenuRoundedIcon>
+              paddingRight: "5px",
+            }}></MenuRoundedIcon>
           <Drawer
-            anchor="right"
+            anchor='right'
             open={hamMenu}
             onClose={toggleDrawer(false)}
             elevation={5}
             sx={{
-              height: '200px',
-              display: { xs: 'block', sm: 'none' },
-            }}
-          >
+              height: "200px",
+              display: { xs: "block", sm: "none" },
+            }}>
             <Box
-              role="presentation"
+              role='presentation'
               onClick={toggleDrawer(false)}
-              onKeyDown={toggleDrawer(false)}
-            >
+              onKeyDown={toggleDrawer(false)}>
               <MenuSmScreen
                 openLogin={openLogin}
                 loginOpen={loginOpen}
@@ -119,39 +113,35 @@ export default function Header() {
 
 function MenuSmScreen(props) {
   const logout = () => {
-    localStorage.removeItem('holiToken');
+    localStorage.removeItem("holiToken");
     window.location.reload();
   };
 
-  if (token()) {
+  if (getToken()) {
     return (
       <>
         <List
           sx={{
-            width: '150px',
-          }}
-        >
+            width: "150px",
+          }}>
           <ListItem
             sx={{
-              m: '0',
-              p: '0',
-            }}
-          >
+              m: "0",
+              p: "0",
+            }}>
             <ListItemButton
               sx={{
-                m: '0',
-                p: '0',
-              }}
-            >
+                m: "0",
+                p: "0",
+              }}>
               <Button>
-                <NavLink to="/" style={{ textDecoration: 'none' }}>
+                <NavLink to='/' style={{ textDecoration: "none" }}>
                   <Typography
-                    variant="body2"
+                    variant='body2'
                     sx={{
-                      color: 'primary.main',
-                      fontWeight: 'bold',
-                    }}
-                  >
+                      color: "primary.main",
+                      fontWeight: "bold",
+                    }}>
                     My Profile
                   </Typography>
                 </NavLink>
@@ -160,17 +150,15 @@ function MenuSmScreen(props) {
           </ListItem>
           <ListItem
             sx={{
-              m: '0',
-              p: '0',
-            }}
-          >
+              m: "0",
+              p: "0",
+            }}>
             <ListItemButton
               sx={{
-                m: '0',
-                p: '0',
-              }}
-            >
-              <Button onClick={logout} sx={{ fontWeight: 'bold' }}>
+                m: "0",
+                p: "0",
+              }}>
+              <Button onClick={logout} sx={{ fontWeight: "bold" }}>
                 Logout
               </Button>
             </ListItemButton>
@@ -183,47 +171,40 @@ function MenuSmScreen(props) {
       <>
         <List
           sx={{
-            width: '150px',
-          }}
-        >
+            width: "150px",
+          }}>
           <ListItem
             sx={{
-              m: '0',
-              p: '0',
-            }}
-          >
+              m: "0",
+              p: "0",
+            }}>
             <ListItemButton
               sx={{
-                m: '0',
-                p: '0',
-              }}
-            >
+                m: "0",
+                p: "0",
+              }}>
               <Button
                 onClick={props.loginOpen}
                 open={props.openLogin}
-                sx={{ fontWeight: 'bold', pb: 0 }}
-              >
+                sx={{ fontWeight: "bold", pb: 0 }}>
                 Login
               </Button>
             </ListItemButton>
           </ListItem>
           <ListItem
             sx={{
-              m: '0',
-              p: '0',
-            }}
-          >
+              m: "0",
+              p: "0",
+            }}>
             <ListItemButton
               sx={{
-                m: '0',
-                p: '0',
-              }}
-            >
+                m: "0",
+                p: "0",
+              }}>
               <Button
                 onClick={props.signUpOpen}
                 open={props.openSignup}
-                sx={{ fontWeight: 'bold' }}
-              >
+                sx={{ fontWeight: "bold" }}>
                 Sign Up
               </Button>
             </ListItemButton>
@@ -236,36 +217,34 @@ function MenuSmScreen(props) {
 
 function MenuMdScreen(props) {
   const logout = () => {
-    localStorage.removeItem('holiToken');
+    localStorage.removeItem("holiToken");
     window.location.reload();
   };
 
-  if (token()) {
+  if (getToken()) {
     return (
       <>
         <Box
           sx={{
-            display: { xs: 'none', sm: 'flex' },
-            flexWrap: 'wrap',
-            justifyContent: 'space-between',
+            display: { xs: "none", sm: "flex" },
+            flexWrap: "wrap",
+            justifyContent: "space-between",
           }}
-          onClick={preventDefault}
-        >
+          onClick={preventDefault}>
           <Button>
-            <NavLink to="/" style={{ textDecoration: 'none' }}>
+            <NavLink to='/' style={{ textDecoration: "none" }}>
               <Typography
-                variant="body2"
+                variant='body2'
                 sx={{
-                  color: 'primary.main',
-                  fontWeight: 'bold',
+                  color: "primary.main",
+                  fontWeight: "bold",
                   ml: 1,
-                }}
-              >
+                }}>
                 My Profile
               </Typography>
             </NavLink>
           </Button>
-          <Button onClick={logout} sx={{ fontWeight: 'bold' }}>
+          <Button onClick={logout} sx={{ fontWeight: "bold" }}>
             Logout
           </Button>
         </Box>
@@ -276,24 +255,21 @@ function MenuMdScreen(props) {
       <>
         <Box
           sx={{
-            display: { xs: 'none', sm: 'flex' },
-            flexWrap: 'wrap',
-            justifyContent: 'space-between',
+            display: { xs: "none", sm: "flex" },
+            flexWrap: "wrap",
+            justifyContent: "space-between",
           }}
-          onClick={preventDefault}
-        >
+          onClick={preventDefault}>
           <Button
             onClick={props.loginOpen}
             open={props.openLogin}
-            sx={{ fontWeight: 'bold' }}
-          >
+            sx={{ fontWeight: "bold" }}>
             Login
           </Button>
           <Button
             onClick={props.signUpOpen}
             open={props.openSignup}
-            sx={{ fontWeight: 'bold' }}
-          >
+            sx={{ fontWeight: "bold" }}>
             Sign Up
           </Button>
         </Box>

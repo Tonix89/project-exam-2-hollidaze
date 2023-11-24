@@ -1,17 +1,17 @@
-import React, { createContext, useState, useEffect } from 'react';
-import { Backdrop, CircularProgress, Box, Grid } from '@mui/material';
-import GetVenue from '../../../api/Venue';
-import VenueCard from '../../Venue_card';
-import SearchBar from '../../Search_bar';
-import SortFilter from '../../Sort_filter';
-import { NavLink } from 'react-router-dom';
+import React, { createContext, useState, useEffect } from "react";
+import { Backdrop, CircularProgress, Box, Grid } from "@mui/material";
+import GetVenue from "../../../api/Venue";
+import VenueCard from "../../Venue_card";
+import SearchBar from "../../Search_bar";
+import SortFilter from "../../Sort_filter";
+import { NavLink } from "react-router-dom";
 
 export const VenueData = createContext();
 
 function Home() {
   const [filter, setFilter] = useState([]);
   const [apiLink, setApiLink] = useState(
-    'https://api.noroff.dev/api/v1/holidaze/venues?limit=25',
+    "https://api.noroff.dev/api/v1/holidaze/venues?limit=25",
   );
   const [venueData, setVenueData] = useState([]);
 
@@ -24,11 +24,11 @@ function Home() {
   useEffect(() => {
     if (price) {
       setApiLink(
-        'https://api.noroff.dev/api/v1/holidaze/venues?sort=price&sortOrder=' +
+        "https://api.noroff.dev/api/v1/holidaze/venues?sort=price&sortOrder=" +
           price,
       );
     } else {
-      setApiLink('https://api.noroff.dev/api/v1/holidaze/venues');
+      setApiLink("https://api.noroff.dev/api/v1/holidaze/venues");
     }
   }, [price]);
 
@@ -37,7 +37,7 @@ function Home() {
   useEffect(() => {
     const currentUrl = window.location.href;
     const urlParams = new URLSearchParams(currentUrl);
-    const isFilter = urlParams.get('filter');
+    const isFilter = urlParams.get("filter");
     if (isFilter) {
       if (continent && !country) {
         setVenueData(
@@ -67,10 +67,9 @@ function Home() {
   if (isLoading) {
     return (
       <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={true}
-      >
-        <CircularProgress color="inherit" />
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={true}>
+        <CircularProgress color='inherit' />
       </Backdrop>
     );
   }
@@ -88,15 +87,13 @@ function Home() {
       <Grid
         container
         spacing={{ xs: 2, md: 3 }}
-        columns={{ xs: 4, sm: 8, md: 12 }}
-      >
+        columns={{ xs: 4, sm: 8, md: 12 }}>
         {venueData.map((venue) => (
           <VenueData.Provider value={venue} key={venue.id}>
             <Grid item xs={12} sm={4} md={4}>
               <NavLink
                 to={`/venue/${venue.id}`}
-                style={{ textDecoration: 'none' }}
-              >
+                style={{ textDecoration: "none" }}>
                 <VenueCard />
               </NavLink>
             </Grid>

@@ -1,6 +1,6 @@
-export const token = () => {
+export const getToken = () => {
   try {
-    return localStorage.getItem('holiToken');
+    return localStorage.getItem("holiToken");
   } catch {
     return null;
   }

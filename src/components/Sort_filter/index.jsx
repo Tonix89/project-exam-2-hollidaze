@@ -5,25 +5,25 @@ import {
   Button,
   Autocomplete,
   TextField,
-} from '@mui/material';
-import React, { useState, useContext, useEffect } from 'react';
-import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined';
-import theme from '../../styles/theme';
-import { VenueData } from '../Pages/Home';
-import { useNavigate } from 'react-router-dom';
+} from "@mui/material";
+import React, { useState, useContext, useEffect } from "react";
+import TuneOutlinedIcon from "@mui/icons-material/TuneOutlined";
+import theme from "../../styles/theme";
+import { VenueData } from "../Pages/Home";
+import { useNavigate } from "react-router-dom";
 
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  bgcolor: 'background.paper',
-  border: '2px solid',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  bgcolor: "background.paper",
+  border: "2px solid",
   borderColor: theme.palette.secondary.main,
-  borderRadius: '10px',
+  borderRadius: "10px",
   boxShadow: 24,
   p: 4,
-  width: { xs: '90%', md: '30%' },
+  width: { xs: "90%", md: "30%" },
 };
 
 function SortFilter(props) {
@@ -33,17 +33,17 @@ function SortFilter(props) {
 
   const data = useContext(VenueData);
   const [continent, setContinent] = useState();
-  const [continentValue, setContinentValue] = useState('');
-  const [continentInput, setContinentInput] = useState('');
+  const [continentValue, setContinentValue] = useState("");
+  const [continentInput, setContinentInput] = useState("");
   const [newData, setNewData] = useState([]);
-  const [country, setCountry] = useState('');
-  const [countryInput, setCountryInput] = useState('');
+  const [country, setCountry] = useState("");
+  const [countryInput, setCountryInput] = useState("");
   const [sortValue, setSortValue] = useState(null);
-  const [sortInput, setSortInput] = useState('');
+  const [sortInput, setSortInput] = useState("");
 
   const sortOptions = [
-    { label: 'Lowest to Highest', value: 'asc' },
-    { label: 'Highest to Lowest', value: 'desc' },
+    { label: "Lowest to Highest", value: "asc" },
+    { label: "Highest to Lowest", value: "desc" },
   ];
 
   const isOptionEqualToValue = (option, sortValue) => {
@@ -52,7 +52,7 @@ function SortFilter(props) {
 
   const continentOption = Array.from(
     new Set(data.map((venue) => venue.location.continent)),
-  ).filter((value) => value !== '');
+  ).filter((value) => value !== "");
 
   useEffect(() => {
     if (continent) {
@@ -94,7 +94,7 @@ function SortFilter(props) {
         );
       }
     } else {
-      newUrl('');
+      newUrl("");
     }
 
     setOpen(false);
@@ -102,7 +102,7 @@ function SortFilter(props) {
 
   const countryOption = Array.from(
     new Set(newData.map((country) => country.location.country)),
-  ).filter((value) => value !== '');
+  ).filter((value) => value !== "");
 
   const handleOpen = () => {
     setOpen(true);
@@ -110,27 +110,27 @@ function SortFilter(props) {
 
     const urlParams = new URLSearchParams(currentUrl);
 
-    const isContinent = urlParams.get('continent');
+    const isContinent = urlParams.get("continent");
     if (isContinent) {
       setContinent(isContinent);
       setContinentInput(isContinent);
       setContinentValue(isContinent);
     }
-    const isCountry = urlParams.get('country');
+    const isCountry = urlParams.get("country");
     if (isCountry) {
       setCountryInput(isCountry);
       setCountry(isCountry);
     }
-    const isPrice = urlParams.get('price');
+    const isPrice = urlParams.get("price");
     if (isPrice) {
-      if (isPrice === 'asc') {
-        setSortValue({ label: 'Lowest to Highest', value: 'asc' });
-        setSortInput('Lowest to Highest');
-      } else if (isPrice === 'desc') {
-        setSortValue({ label: 'Highest to Lowest', value: 'desc' });
-        setSortInput('Highest to Lowest');
+      if (isPrice === "asc") {
+        setSortValue({ label: "Lowest to Highest", value: "asc" });
+        setSortInput("Lowest to Highest");
+      } else if (isPrice === "desc") {
+        setSortValue({ label: "Highest to Lowest", value: "desc" });
+        setSortInput("Highest to Lowest");
       } else {
-        setSortInput('');
+        setSortInput("");
         setSortValue(null);
       }
     }
@@ -140,27 +140,25 @@ function SortFilter(props) {
   return (
     <div>
       <Button
-        variant="outlined"
+        variant='outlined'
         endIcon={<TuneOutlinedIcon />}
         sx={{
           mb: 1,
           background: theme.palette.light.main,
           borderColor: theme.palette.grey.main,
-          fontWeight: 'bold',
+          fontWeight: "bold",
         }}
-        onClick={handleOpen}
-      >
+        onClick={handleOpen}>
         Sort & Filter
       </Button>
       <Modal
         open={open}
         onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+        aria-labelledby='modal-modal-title'
+        aria-describedby='modal-modal-description'>
         <Box sx={style}>
           <Box>
-            <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold' }}>
+            <Typography variant='h6' component='h2' sx={{ fontWeight: "bold" }}>
               Continent
             </Typography>
             <Autocomplete
@@ -173,21 +171,21 @@ function SortFilter(props) {
               onInputChange={(e, newValue) => {
                 setContinentInput(newValue);
                 setContinent(newValue);
-                setCountry('');
+                setCountry("");
               }}
-              id="continent-option"
+              id='continent-option'
               options={continentOption}
               sx={{
                 width: 300,
-                border: '1px solid',
+                border: "1px solid",
                 borderColor: theme.palette.primary.main,
-                borderRadius: '10px',
+                borderRadius: "10px",
               }}
               renderInput={(params) => <TextField {...params} />}
             />
           </Box>
           <Box sx={{ mt: 2 }}>
-            <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold' }}>
+            <Typography variant='h6' component='h2' sx={{ fontWeight: "bold" }}>
               Country
             </Typography>
             <Autocomplete
@@ -200,19 +198,19 @@ function SortFilter(props) {
               onInputChange={(e, newValue) => {
                 setCountryInput(newValue);
               }}
-              id="country-option"
+              id='country-option'
               options={countryOption}
               sx={{
                 width: 300,
-                border: '1px solid',
+                border: "1px solid",
                 borderColor: theme.palette.primary.main,
-                borderRadius: '10px',
+                borderRadius: "10px",
               }}
               renderInput={(params) => <TextField {...params} />}
             />
           </Box>
           <Box sx={{ mt: 2 }}>
-            <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold' }}>
+            <Typography variant='h6' component='h2' sx={{ fontWeight: "bold" }}>
               Price
             </Typography>
             <Autocomplete
@@ -227,22 +225,21 @@ function SortFilter(props) {
               onInputChange={(e, newValue) => {
                 setSortInput(newValue);
               }}
-              id="sort-option"
+              id='sort-option'
               sx={{
                 width: 300,
-                border: '1px solid',
+                border: "1px solid",
                 borderColor: theme.palette.primary.main,
-                borderRadius: '10px',
+                borderRadius: "10px",
               }}
               renderInput={(params) => <TextField {...params} />}
             />
           </Box>
-          <Box sx={{ textAlign: 'center', mt: 3 }}>
+          <Box sx={{ textAlign: "center", mt: 3 }}>
             <Button
-              variant="contained"
+              variant='contained'
               onClick={saveFilter}
-              sx={{ width: 100, borderRadius: '20px', fontWeight: 'bold' }}
-            >
+              sx={{ width: 100, borderRadius: "20px", fontWeight: "bold" }}>
               Save
             </Button>
           </Box>

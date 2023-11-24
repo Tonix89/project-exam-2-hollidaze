@@ -1,8 +1,8 @@
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { css } from '@mui/system';
-import theme from '../../../styles/theme';
-import React, { useEffect, useState, useRef } from 'react';
-import getTimeStamp from '../../../tools/Timestamp_array';
+import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
+import { css } from "@mui/system";
+import theme from "../../../styles/theme";
+import React, { useEffect, useState, useRef } from "react";
+import getTimeStamp from "../../../tools/Timestamp_array";
 
 function Availability(props) {
   const [timeStampArray, setTimeStampArray] = useState();
@@ -38,19 +38,19 @@ function Availability(props) {
 
     const commonStyles = {
       border: `2px solid ${theme.palette.secondary.main}`,
-      fontWeight: 'bold',
-      width: 'auto',
-      maxWidth: '320px',
+      fontWeight: "bold",
+      width: "auto",
+      maxWidth: "320px",
       m: 0,
-      '& .MuiPickersDay-today:not(.Mui-selected)': {
+      "& .MuiPickersDay-today:not(.Mui-selected)": {
         borderColor: theme.palette.secondary.main,
       },
-      '& div': { fontWeight: 'bold' },
-      '& .MuiDayCalendar-header': { backgroundColor: theme.palette.light.main },
-      '& .MuiTypography-root': { fontWeight: 'bolder' },
-      '& button': { fontWeight: 'bolder' },
-      '& .MuiYearCalendar-root': {
-        width: 'auto',
+      "& div": { fontWeight: "bold" },
+      "& .MuiDayCalendar-header": { backgroundColor: theme.palette.light.main },
+      "& .MuiTypography-root": { fontWeight: "bolder" },
+      "& button": { fontWeight: "bolder" },
+      "& .MuiYearCalendar-root": {
+        width: "auto",
       },
     };
 

@@ -1,33 +1,33 @@
-import { Container, TextField, Box, Link } from '@mui/material';
-import React, { useState, useContext, useEffect } from 'react';
-import ClearIcon from '@mui/icons-material/Clear';
-import { VenueData } from '../Pages/Home';
-import theme from '../../styles/theme';
+import { Container, TextField, Box, Link } from "@mui/material";
+import React, { useState, useContext, useEffect } from "react";
+import ClearIcon from "@mui/icons-material/Clear";
+import { VenueData } from "../Pages/Home";
+import theme from "../../styles/theme";
 
 let styles = {
-  display: 'none',
+  display: "none",
 };
 
 function SearchBar() {
   const data = useContext(VenueData);
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState("");
   const [productList, setProductList] = useState([]);
   const [showList, setShowList] = useState(false);
 
   function clearSearch() {
-    setSearchValue('');
+    setSearchValue("");
   }
 
   function CreateList({ item }) {
     if (searchValue) {
       return (
-        <Link href={`/contact/${item.id}`} underline="none">
+        <Link href={`/contact/${item.id}`} underline='none'>
           <Box onClick={clearSearch}>{item.name}</Box>
         </Link>
       );
     } else {
       styles = {
-        display: 'none',
+        display: "none",
       };
     }
   }
@@ -41,89 +41,87 @@ function SearchBar() {
 
   useEffect(() => {
     const handleDomClick = (e) => {
-      if (e.target.id === 'search-input' || e.target.id === 'search-results') {
+      if (e.target.id === "search-input" || e.target.id === "search-results") {
         return;
       }
       setShowList(false);
     };
 
-    document.addEventListener('click', handleDomClick);
+    document.addEventListener("click", handleDomClick);
 
     return () => {
-      document.removeEventListener('click', handleDomClick);
+      document.removeEventListener("click", handleDomClick);
     };
   }, []);
 
   return (
     <Container
       sx={{
-        backgroundColor: 'grey.main',
+        backgroundColor: "grey.main",
         mb: 1,
-        textAlign: 'center',
-        position: 'relative',
-      }}
-    >
+        textAlign: "center",
+        position: "relative",
+      }}>
       <TextField
-        id="search-input"
-        variant="outlined"
-        label="Search Here"
+        id='search-input'
+        variant='outlined'
+        label='Search Here'
         value={searchValue}
-        size="small"
+        size='small'
         onChange={(event) => {
           setSearchValue(event.target.value);
           styles = {
-            position: 'absolute',
-            top: '50px',
-            backgroundColor: 'white',
-            zIndex: '100',
-            display: 'flex',
-            flexWrap: 'wrap',
-            flexDirection: 'column',
-            alignItems: 'start',
-            textAlign: 'start',
-            padding: '10px',
+            position: "absolute",
+            top: "50px",
+            backgroundColor: "white",
+            zIndex: "100",
+            display: "flex",
+            flexWrap: "wrap",
+            flexDirection: "column",
+            alignItems: "start",
+            textAlign: "start",
+            padding: "10px",
           };
           setShowList(true);
         }}
         sx={{
-          backgroundColor: 'white',
+          backgroundColor: "white",
           m: 1,
-          width: { xs: '95%', md: '80%' },
-          borderRadius: '25px',
-          '& .MuiInputBase-root': { borderRadius: '25px' },
-          '& .MuiInputLabel-root': {
-            mt: '2px',
-            backgroundColor: 'white',
+          width: { xs: "95%", md: "80%" },
+          borderRadius: "25px",
+          "& .MuiInputBase-root": { borderRadius: "25px" },
+          "& .MuiInputLabel-root": {
+            mt: "2px",
+            backgroundColor: "white",
             px: 1,
-            fontWeight: 'bold',
+            fontWeight: "bold",
           },
         }}
       />
       {searchValue && (
         <ClearIcon
           onClick={() => {
-            setSearchValue('');
+            setSearchValue("");
           }}
           sx={{
-            position: 'absolute',
-            right: { xs: '50px', md: '150px' },
-            top: '17px',
-            cursor: 'pointer',
+            position: "absolute",
+            right: { xs: "50px", md: "150px" },
+            top: "17px",
+            cursor: "pointer",
           }}
         />
       )}
       {showList && (
         <Box
-          id="search-results"
+          id='search-results'
           style={styles}
           sx={{
-            left: { xs: '35px', sm: '50px', md: '145px' },
-            maxWidth: { xs: '230px', md: '500px' },
-            borderRadius: '10px',
-            border: '1px solid',
+            left: { xs: "35px", sm: "50px", md: "145px" },
+            maxWidth: { xs: "230px", md: "500px" },
+            borderRadius: "10px",
+            border: "1px solid",
             borderColor: theme.palette.secondary.main,
-          }}
-        >
+          }}>
           {productList.length === 0 ? (
             <p>No item matches</p>
           ) : (

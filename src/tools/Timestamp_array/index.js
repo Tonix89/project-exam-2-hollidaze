@@ -12,7 +12,7 @@ function getTimeStamp(data) {
     let currentDate = new Date(startTimestamp);
 
     while (currentDate.getTime() <= finishTimestamp) {
-      stampsArray.push(currentDate.toISOString().split('T')[0]);
+      stampsArray.push(currentDate.toISOString().split("T")[0]);
       currentDate.setDate(currentDate.getDate() + 1);
     }
 
@@ -42,7 +42,7 @@ function getTimeStamp(data) {
   const uniqueArray = removeDuplicateValues(timesstamps);
 
   const calWeek = document.querySelectorAll(
-    '.MuiDayCalendar-weekContainer button',
+    ".MuiDayCalendar-weekContainer button",
   );
 
   const calArray = Array.from(calWeek);
@@ -50,15 +50,15 @@ function getTimeStamp(data) {
   const daysArray = [];
 
   calArray.forEach((week) => {
-    const timeStamp = parseInt(week.getAttribute('data-timestamp'), 10);
+    const timeStamp = parseInt(week.getAttribute("data-timestamp"), 10);
 
     const date = new Date(timeStamp);
 
-    const isoStringDate = date.toLocaleDateString().split('/');
+    const isoStringDate = date.toLocaleDateString().split("/");
     const formattedDate = `${isoStringDate[2]}-${isoStringDate[0].padStart(
       2,
-      '0',
-    )}-${isoStringDate[1].padStart(2, '0')}`;
+      "0",
+    )}-${isoStringDate[1].padStart(2, "0")}`;
 
     uniqueArray.forEach((array) => {
       if (array === formattedDate) {
