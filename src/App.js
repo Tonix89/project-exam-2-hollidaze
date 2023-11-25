@@ -7,6 +7,7 @@ import Contact from "./components/Pages/Contact";
 import SingleVenue from "./components/Pages/Venue";
 import Booking from "./components/Pages/Booking";
 import SuccessPage from "./components/Pages/Success";
+import Profile from "./components/Pages/Profile";
 import { CssBaseline } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -23,6 +24,7 @@ function App() {
               <Route path='/venue/:id' element={<SingleVenue />} />
               <Route path='/booking/:id' element={<Booking />} />
               <Route path='/success/:name' element={<SuccessPage />} />
+              <Route path='/profile/:user' element={<Profile />} />
               <Route path='*' element={<PageNotFound />} />
             </Route>
           </Routes>

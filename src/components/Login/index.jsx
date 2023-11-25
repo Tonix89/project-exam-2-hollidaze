@@ -56,8 +56,9 @@ function Login(props) {
         alert(res.errors[0].message);
       } else {
         alert("Welcome " + res.name);
-        window.location.reload();
         localStorage.setItem("holiToken", res.accessToken);
+        localStorage.setItem("holiUser", res.name);
+        window.location.reload();
       }
     });
   }

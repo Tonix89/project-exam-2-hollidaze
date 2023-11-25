@@ -114,10 +114,12 @@ export default function Header() {
 function MenuSmScreen(props) {
   const logout = () => {
     localStorage.removeItem("holiToken");
+    localStorage.removeItem("holiUser");
     window.location.reload();
   };
 
   if (getToken()) {
+    const userName = localStorage.getItem("holiUser");
     return (
       <>
         <List
@@ -135,7 +137,9 @@ function MenuSmScreen(props) {
                 p: "0",
               }}>
               <Button>
-                <NavLink to='/' style={{ textDecoration: "none" }}>
+                <NavLink
+                  to={`/profile/${userName}`}
+                  style={{ textDecoration: "none" }}>
                   <Typography
                     variant='body2'
                     sx={{
@@ -218,10 +222,12 @@ function MenuSmScreen(props) {
 function MenuMdScreen(props) {
   const logout = () => {
     localStorage.removeItem("holiToken");
+    localStorage.removeItem("holiUser");
     window.location.reload();
   };
 
   if (getToken()) {
+    const userName = localStorage.getItem("holiUser");
     return (
       <>
         <Box
@@ -232,7 +238,9 @@ function MenuMdScreen(props) {
           }}
           onClick={preventDefault}>
           <Button>
-            <NavLink to='/' style={{ textDecoration: "none" }}>
+            <NavLink
+              to={`/profile/${userName}`}
+              style={{ textDecoration: "none" }}>
               <Typography
                 variant='body2'
                 sx={{
