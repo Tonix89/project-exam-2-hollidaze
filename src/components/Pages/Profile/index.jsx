@@ -9,10 +9,13 @@ import {
   Backdrop,
   Tabs,
   Tab,
+  Grid,
 } from "@mui/material";
 import PropTypes from "prop-types";
 import theme from "../../../styles/theme";
 import GetApi from "../../../api/Get";
+import BookingCard from "../../Cards/Bookings";
+import { NavLink } from "react-router-dom";
 
 function MenuTab(props) {
   const { children, value, index } = props;
@@ -24,8 +27,8 @@ function MenuTab(props) {
       id={`profile-tabpanel-${index}`}
       aria-labelledby={`profile-tab-${index}`}>
       {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+        <Box>
+          <Box>{children}</Box>
         </Box>
       )}
     </div>
@@ -126,7 +129,10 @@ function Profile() {
             value={value}
             onChange={handleChange}
             aria-label='Profile menu tabs'
-            textColor='primary'>
+            textColor='primary'
+            sx={{
+              mb: 2,
+            }}>
             <Tab
               label='Bookings'
               sx={{ fontWeight: "bold" }}
@@ -137,7 +143,26 @@ function Profile() {
           </Tabs>
         </Box>
         <MenuTab value={value} index={0}>
-          User present bookings
+          <Grid
+            container
+            spacing={{ xs: 2, md: 1 }}
+            columns={{ xs: 4, sm: 8, md: 12 }}>
+            {data.bookings.map((booking) => (
+              <Grid
+                key={booking.id}
+                item
+                xs={12}
+                sm={4}
+                md={6}
+                sx={{ width: "-webkit-fill-available" }}>
+                <NavLink
+                  to={`/venue/${booking.venue.id}`}
+                  style={{ textDecoration: "none" }}>
+                  <BookingCard value={booking} />
+                </NavLink>
+              </Grid>
+            ))}
+          </Grid>
         </MenuTab>
         <MenuTab value={value} index={1}>
           User venues
