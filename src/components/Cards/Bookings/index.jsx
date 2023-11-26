@@ -1,11 +1,4 @@
-import {
-  Card,
-  CardActionArea,
-  CardMedia,
-  CardContent,
-  Box,
-  Typography,
-} from "@mui/material";
+import { Card, CardMedia, CardContent, Box, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import theme from "../../../styles/theme";
@@ -22,8 +15,7 @@ function BookingCard(props) {
           borderColor: theme.palette.secondary.main,
           height: "180px",
         }}>
-        <CardActionArea
-          sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}>
           <CardMedia
             component='img'
             image={venue.media[0]}
@@ -40,6 +32,7 @@ function BookingCard(props) {
               mr: 0.5,
               height: "180px",
               py: 1,
+              "&.MuiCardContent-root:last-child ": { pb: 1 },
             }}>
             <Typography
               gutterBottom
@@ -79,7 +72,7 @@ function BookingCard(props) {
                       fontSize: { xs: "1.2rem", sm: "1.5rem" },
                     },
                   }}
-                  defaultValue={dayjs(venue.dateFrom)}
+                  defaultValue={dayjs(booking.dateFrom)}
                   disabled
                 />
               </Box>
@@ -113,7 +106,7 @@ function BookingCard(props) {
                       fontSize: { xs: "1.2rem", sm: "1.5rem" },
                     },
                   }}
-                  defaultValue={dayjs(venue.dateTo)}
+                  defaultValue={dayjs(booking.dateTo)}
                   disabled
                 />
               </Box>
@@ -122,7 +115,7 @@ function BookingCard(props) {
               Guest : {booking.guests}
             </Typography>
           </CardContent>
-        </CardActionArea>
+        </Box>
       </Card>
     </>
   );

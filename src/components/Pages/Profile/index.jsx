@@ -10,11 +10,13 @@ import {
   Tabs,
   Tab,
   Grid,
+  Container,
 } from "@mui/material";
 import PropTypes from "prop-types";
 import theme from "../../../styles/theme";
 import GetApi from "../../../api/Get";
 import BookingCard from "../../Cards/Bookings";
+import VenueCard from "../../Cards/Venue";
 import { NavLink } from "react-router-dom";
 
 function MenuTab(props) {
@@ -165,7 +167,55 @@ function Profile() {
           </Grid>
         </MenuTab>
         <MenuTab value={value} index={1}>
-          User venues
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}>
+            <Button
+              variant='contained'
+              sx={{
+                width: 200,
+                borderRadius: "20px",
+                fontWeight: "bold",
+                mb: 2,
+              }}>
+              Create Venue
+            </Button>
+            <Grid
+              container
+              spacing={{ xs: 2, md: 3 }}
+              columns={{ xs: 4, sm: 8, md: 12 }}>
+              {data.venues.length === 0 ? (
+                <Container
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    mt: 5,
+                  }}>
+                  <Typography>You have no venue created yet.</Typography>
+                </Container>
+              ) : (
+                data.venues.map((venue) => (
+                  <Grid
+                    key={venue.id}
+                    item
+                    xs={12}
+                    sm={4}
+                    md={4}
+                    sx={{ width: "-webkit-fill-available" }}>
+                    <NavLink
+                      to={`/venue/${venue.venue.id}`}
+                      style={{ textDecoration: "none" }}>
+                      <VenueCard value={venue} />
+                    </NavLink>
+                  </Grid>
+                ))
+              )}
+            </Grid>
+          </Box>
         </MenuTab>
         <MenuTab value={value} index={2}>
           User past bookings
