@@ -255,8 +255,6 @@ function Booking() {
     return <Box>Sorry, we have an error. {data.message}.</Box>;
   }
 
-  console.log(dateFrom);
-
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>

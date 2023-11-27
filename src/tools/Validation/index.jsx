@@ -33,3 +33,38 @@ export const loginSchema = yup.object({
     .min(8, "Must be at least 8 characters")
     .required("Must not be empty."),
 });
+
+export const createVenueSchema = yup.object({
+  name: yup
+    .string()
+    .min(8, "Must be at least 8 characters.")
+    .max(30, "Must not be more than 30 characters.")
+    .required("Must not be empty."),
+  description: yup
+    .string()
+    .min(25, "Must be at least 25 characters.")
+    .max(200, "Must not be more than 200 characters.")
+    .required("Must not be empty."),
+  price: yup
+    .number()
+    .positive("Must be a positive number.")
+    .integer("Must be a whole number.")
+    .required("Must not be empty.")
+    .typeError("Must be a number."),
+  guests: yup
+    .number()
+    .positive("Must be a positive number.")
+    .integer("Must be a whole number.")
+    .required("Must not be empty.")
+    .typeError("Must be a number."),
+  address: yup.string().required("Must not be empty."),
+  city: yup.string().required("Must not be empty."),
+  zipcode: yup
+    .number()
+    .positive("Must be a positive number.")
+    .integer("Must be a whole number.")
+    .required("Must not be empty.")
+    .typeError("Must be a number."),
+  country: yup.string().required("Must not be empty."),
+  continent: yup.string().required("Must not be empty."),
+});

@@ -18,6 +18,7 @@ import GetApi from "../../../api/Get";
 import BookingCard from "../../Cards/Bookings";
 import VenueCard from "../../Cards/Venue";
 import { NavLink } from "react-router-dom";
+import { getToken } from "../../../tools/Token";
 
 function MenuTab(props) {
   const { children, value, index } = props;
@@ -52,6 +53,11 @@ function tabProps(index) {
 
 function Profile() {
   const user = useParams().user;
+  const token = getToken();
+
+  if (!token) {
+    window.location.href = "/";
+  }
 
   const [value, setValue] = useState(0);
 
@@ -173,16 +179,18 @@ function Profile() {
               flexDirection: "column",
               alignItems: "center",
             }}>
-            <Button
-              variant='contained'
-              sx={{
-                width: 200,
-                borderRadius: "20px",
-                fontWeight: "bold",
-                mb: 2,
-              }}>
-              Create Venue
-            </Button>
+            <NavLink to={`/create/create`} style={{ textDecoration: "none" }}>
+              <Button
+                variant='contained'
+                sx={{
+                  width: 200,
+                  borderRadius: "20px",
+                  fontWeight: "bold",
+                  mb: 2,
+                }}>
+                Create Venue
+              </Button>
+            </NavLink>
             <Grid
               container
               spacing={{ xs: 2, md: 3 }}
@@ -207,7 +215,7 @@ function Profile() {
                     md={4}
                     sx={{ width: "-webkit-fill-available" }}>
                     <NavLink
-                      to={`/venue/${venue.venue.id}`}
+                      to={`/venue/${venue.id}`}
                       style={{ textDecoration: "none" }}>
                       <VenueCard value={venue} />
                     </NavLink>

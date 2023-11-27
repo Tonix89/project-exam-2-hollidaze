@@ -11,6 +11,7 @@ import Profile from "./components/Pages/Profile";
 import { CssBaseline } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import VenueCreate from "./components/Pages/Venue_create";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
               <Route path='/booking/:id' element={<Booking />} />
               <Route path='/success/:name' element={<SuccessPage />} />
               <Route path='/profile/:user' element={<Profile />} />
+              <Route path='/create/:create' element={<VenueCreate />} />
               <Route path='*' element={<PageNotFound />} />
             </Route>
           </Routes>
