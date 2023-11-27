@@ -19,6 +19,7 @@ import BookingCard from "../../Cards/Bookings";
 import VenueCard from "../../Cards/Venue";
 import { NavLink } from "react-router-dom";
 import { getToken } from "../../../tools/Token";
+import EditProfile from "../../Edit_profile";
 
 function MenuTab(props) {
   const { children, value, index } = props;
@@ -60,6 +61,10 @@ function Profile() {
   }
 
   const [value, setValue] = useState(0);
+
+  const [openEditProfile, setOpenEditProfile] = useState(false);
+  const editModalOpen = () => setOpenEditProfile(true);
+  const editModalClose = () => setOpenEditProfile(false);
 
   const handleChange = (e, newValue) => {
     setValue(newValue);
@@ -120,6 +125,7 @@ function Profile() {
           </Box>
           <Button
             variant='contained'
+            onClick={editModalOpen}
             sx={{
               backgroundColor: "white",
               color: theme.palette.secondary.main,
@@ -229,6 +235,7 @@ function Profile() {
           User past bookings
         </MenuTab>
       </Box>
+      <EditProfile data={data} open={openEditProfile} close={editModalClose} />
     </>
   );
 }

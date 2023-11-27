@@ -18,9 +18,9 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { createVenueSchema } from "../../../tools/Validation";
-import * as yup from "yup";
 import { getToken } from "../../../tools/Token";
 import postApi from "../../../api/Post";
+import { validateImageUrlSchema } from "../../../tools/Validation";
 
 function VenueCreate() {
   const token = getToken();
@@ -38,46 +38,11 @@ function VenueCreate() {
   const handleAddImage = () => {
     const imageInput = document.getElementById("image").value;
     if (imageInput) {
-      const isImageURL = (url) => {
-        const imageRegex = /\.(jpeg|jpg|gif|png|bmp)(\?.*)?$/i;
-        return imageRegex.test(url);
-      };
-
-      const isURLAccessible = async (url) => {
-        try {
-          const response = await fetch(url, { method: "HEAD" });
-          return response.ok;
-        } catch (error) {
-          return false;
-        }
-      };
-
-      const validationSchema = yup
-        .object()
-        .shape({
-          image: yup
-            .string()
-            .url()
-            .test("is-image-url", "URL must be a valid image URL", (value) =>
-              isImageURL(value),
-            ),
-        })
-        .test(
-          "is-url-accessible",
-          "URL must be publicly accessible",
-          async (values) => {
-            const { image } = values;
-            if (image) {
-              return await isURLAccessible(image);
-            }
-            return true;
-          },
-        );
       const data = {
         image: imageInput,
       };
 
-      validationSchema
+      validateImageUrlSchema
         .validate(data)
         .then((res) => {
           setImageUrl([...imageUrl, res.image]);
@@ -110,6 +75,7 @@ function VenueCreate() {
     setLoader(true);
     const url = "https://api.noroff.dev/api/v1/holidaze/venues/";
     if (imageUrl) {
+      setImageError("");
       const bodyData = {
         name: venue.name,
         description: venue.description,
@@ -145,9 +111,11 @@ function VenueCreate() {
           window.location.href = "/success/createVenue";
         } else {
           setLoader(false);
-          alert("Sorry, we have an error registering your booking " + res);
+          alert("Sorry, we have an error registering your booking. ");
         }
       });
+    } else {
+      setImageError("Add at least 1 image url.");
     }
   }
 
