@@ -12,6 +12,7 @@ import { CssBaseline } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import VenueCreate from "./components/Pages/Venue_create";
+import VenueEdit from "./components/Pages/Venue_edit";
 
 function App() {
   return (
@@ -26,7 +27,8 @@ function App() {
               <Route path='/booking/:id' element={<Booking />} />
               <Route path='/success/:name' element={<SuccessPage />} />
               <Route path='/profile/:user' element={<Profile />} />
-              <Route path='/create/:create' element={<VenueCreate />} />
+              <Route path='/venue/create' element={<VenueCreate />} />
+              <Route path='/venue/edit/:id' element={<VenueEdit />} />
               <Route path='*' element={<PageNotFound />} />
             </Route>
           </Routes>

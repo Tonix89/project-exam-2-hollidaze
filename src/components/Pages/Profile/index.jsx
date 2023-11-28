@@ -152,7 +152,13 @@ function Profile() {
               sx={{ fontWeight: "bold" }}
               {...tabProps(0)}
             />
-            <Tab label='Venues' sx={{ fontWeight: "bold" }} {...tabProps(1)} />
+            {data.venueManager && (
+              <Tab
+                label='Venues'
+                sx={{ fontWeight: "bold" }}
+                {...tabProps(1)}
+              />
+            )}
             <Tab label='History' sx={{ fontWeight: "bold" }} {...tabProps(2)} />
           </Tabs>
         </Box>
@@ -178,14 +184,14 @@ function Profile() {
             ))}
           </Grid>
         </MenuTab>
-        <MenuTab value={value} index={1}>
+        <MenuTab value={value} index={data.venueManager ? 1 : -1}>
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
             }}>
-            <NavLink to={`/create/create`} style={{ textDecoration: "none" }}>
+            <NavLink to={`/venue/create`} style={{ textDecoration: "none" }}>
               <Button
                 variant='contained'
                 sx={{
@@ -231,7 +237,7 @@ function Profile() {
             </Grid>
           </Box>
         </MenuTab>
-        <MenuTab value={value} index={2}>
+        <MenuTab value={value} index={data.venueManager ? 2 : 1}>
           User past bookings
         </MenuTab>
       </Box>

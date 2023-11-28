@@ -20,6 +20,10 @@ import Login from "../../Login";
 import SignUp from "../../Sign_up";
 
 function SingleVenue() {
+  const token = localStorage.getItem("holiToken");
+  const user = localStorage.getItem("holiUser");
+  const params = useParams();
+
   const [openSignup, setOpenSignup] = useState(false);
   const signUpOpen = () => setOpenSignup(true);
   const signUpClose = () => setOpenSignup(false);
@@ -28,14 +32,11 @@ function SingleVenue() {
   const loginOpen = () => setOpenLogin(true);
   const loginClose = () => setOpenLogin(false);
 
-  const token = localStorage.getItem("holiToken");
-
   const notLoggedIn = () => {
     alert("You must login first in order to make bookings.");
     setOpenLogin(true);
   };
 
-  const params = useParams();
   const url =
     "https://api.noroff.dev/api/v1/holidaze/venues/" +
     params.id +
@@ -358,12 +359,55 @@ function SingleVenue() {
                 </Box>
               </Box>
             </Box>
-            <Box
-              sx={{
-                textAlign: "center",
-              }}>
-              {token ? (
-                <NavLink to={`/booking/${params.id}`}>
+            {user === data.owner.name ? (
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: { xs: "column", md: "row" },
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 3,
+                }}>
+                <NavLink to={`/venue/edit/${params.id}`}>
+                  <Button
+                    variant='contained'
+                    sx={{
+                      width: 150,
+                      borderRadius: "20px",
+                      fontWeight: "bold",
+                    }}>
+                    Edit Venue
+                  </Button>
+                </NavLink>
+                <Button
+                  variant='contained'
+                  sx={{
+                    width: 150,
+                    borderRadius: "20px",
+                    fontWeight: "bold",
+                  }}>
+                  Delete Venue
+                </Button>
+              </Box>
+            ) : (
+              <Box
+                sx={{
+                  textAlign: "center",
+                }}>
+                {token ? (
+                  <NavLink to={`/booking/${params.id}`}>
+                    <Button
+                      variant='contained'
+                      sx={{
+                        width: 150,
+                        borderRadius: "20px",
+                        fontWeight: "bold",
+                        my: 2,
+                      }}>
+                      Book Now
+                    </Button>
+                  </NavLink>
+                ) : (
                   <Button
                     variant='contained'
                     sx={{
@@ -371,24 +415,13 @@ function SingleVenue() {
                       borderRadius: "20px",
                       fontWeight: "bold",
                       my: 2,
-                    }}>
+                    }}
+                    onClick={notLoggedIn}>
                     Book Now
                   </Button>
-                </NavLink>
-              ) : (
-                <Button
-                  variant='contained'
-                  sx={{
-                    width: 150,
-                    borderRadius: "20px",
-                    fontWeight: "bold",
-                    my: 2,
-                  }}
-                  onClick={notLoggedIn}>
-                  Book Now
-                </Button>
-              )}
-            </Box>
+                )}
+              </Box>
+            )}
             <Box
               sx={{
                 textAlign: { xs: "start", sm: "center" },

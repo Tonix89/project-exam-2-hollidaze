@@ -74,7 +74,7 @@ function VenueCreate() {
   function onSubmit(venue) {
     setLoader(true);
     const url = "https://api.noroff.dev/api/v1/holidaze/venues/";
-    if (imageUrl) {
+    if (imageUrl.length !== 0) {
       setImageError("");
       const bodyData = {
         name: venue.name,
@@ -108,14 +108,15 @@ function VenueCreate() {
 
       postApi(url, options).then((res) => {
         if (res.created) {
-          window.location.href = "/success/createVenue";
+          window.location.href = "/success/venue_create";
         } else {
           setLoader(false);
           alert("Sorry, we have an error registering your booking. ");
         }
       });
     } else {
-      setImageError("Add at least 1 image url.");
+      setImageError("Add at least 1 image url. Then press add image button.");
+      setLoader(false);
     }
   }
 

@@ -132,7 +132,7 @@ function Booking() {
 
       postApi(bookingUrl, options).then((res) => {
         if (res.created) {
-          window.location.href = "/success/createBooking";
+          window.location.href = "/success/booked_venue";
         } else {
           setLoader(false);
           alert("Sorry, we have an error registering your booking " + res);

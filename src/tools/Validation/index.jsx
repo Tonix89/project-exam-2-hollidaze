@@ -38,16 +38,14 @@ export const validateImageUrlSchema = yup
   .object({
     image: yup
       .string()
-      .url("Avatar must be a valid URL.")
-      .test(
-        "is-image-url",
-        "Avatar must be a valid image URL or publicly accessible.",
-        (value) => isImageURL(value),
+      .url("Image must be a valid URL.")
+      .test("is-image-url", "Image URL must be a valid image URL.", (value) =>
+        isImageURL(value),
       ),
   })
   .test(
     "is-url-accessible",
-    "Avatar must be publicly accessible",
+    "Image must be publicly accessible",
     async (values) => {
       const { image } = values;
       if (image) {
