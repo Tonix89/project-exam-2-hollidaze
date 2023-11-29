@@ -12,17 +12,23 @@ import {
   Backdrop,
   CircularProgress,
   Avatar,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import theme from "../../../styles/theme";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import Availability from "../../Calendar/Availability";
 import Login from "../../Login";
 import SignUp from "../../Sign_up";
+import delApi from "../../../api/Delete";
+import CloseIcon from "@mui/icons-material/Close";
 
 function SingleVenue() {
   const token = localStorage.getItem("holiToken");
   const user = localStorage.getItem("holiUser");
   const params = useParams();
+
+  const [loader, setLoader] = useState(false);
 
   const [openSignup, setOpenSignup] = useState(false);
   const signUpOpen = () => setOpenSignup(true);
@@ -32,9 +38,40 @@ function SingleVenue() {
   const loginOpen = () => setOpenLogin(true);
   const loginClose = () => setOpenLogin(false);
 
+  const [alert, setAlert] = useState(false);
+
+  const [alertText, setAlertText] = useState("");
+  const [alertSeverity, setAlertSeverity] = useState("warning");
+
   const notLoggedIn = () => {
     alert("You must login first in order to make bookings.");
     setOpenLogin(true);
+  };
+
+  const handleDeleteVenue = () => {
+    setAlert(false);
+    setLoader(true);
+    const delUrl = "https://api.noroff.dev/api/v1/holidaze/venues/" + params.id;
+    const options = {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    delApi(delUrl, options).then((res) => {
+      if (res.ok) {
+        setLoader(false);
+        window.location.href = `/profile/${user}`;
+      } else {
+        setAlertSeverity("error");
+        setAlertText(
+          "Sorry, we have error deleting your venue. Error: " + res.message,
+        );
+        setLoader(false);
+        setAlert(true);
+      }
+    });
   };
 
   const url =
@@ -44,7 +81,7 @@ function SingleVenue() {
 
   const { data, isLoading, isError } = GetVenue(url);
 
-  if (isLoading) {
+  if (isLoading || loader) {
     return (
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -88,6 +125,52 @@ function SingleVenue() {
           }}
         />
         <CardContent>
+          <Backdrop
+            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={alert}>
+            <Box sx={{ width: "100%" }}>
+              <Snackbar
+                open={alert}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}>
+                <Alert
+                  variant='filled'
+                  severity={alertSeverity}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    "& .MuiAlert-message": {
+                      display: "flex",
+                      alignItems: "center",
+                    },
+                  }}>
+                  <Typography>{alertText}</Typography>
+                  {alertSeverity === "warning" ? (
+                    <Box>
+                      <Button
+                        color='inherit'
+                        size='small'
+                        onClick={handleDeleteVenue}>
+                        Yes
+                      </Button>
+                      <Button
+                        color='inherit'
+                        size='small'
+                        onClick={() => setAlert(false)}>
+                        No
+                      </Button>
+                    </Box>
+                  ) : (
+                    <Button
+                      color='inherit'
+                      size='small'
+                      onClick={() => setAlert(false)}>
+                      <CloseIcon color='inherit' size='small' />
+                    </Button>
+                  )}
+                </Alert>
+              </Snackbar>
+            </Box>
+          </Backdrop>
           <Box>
             <Typography
               gutterBottom
@@ -206,7 +289,7 @@ function SingleVenue() {
                     fontWeight: "bold",
                     m: 0,
                   }}>
-                  Unavailale
+                  Unavailable
                 </Typography>
               </Box>
             </Box>
@@ -381,6 +464,11 @@ function SingleVenue() {
                 </NavLink>
                 <Button
                   variant='contained'
+                  onClick={() => {
+                    setAlert(true);
+                    setAlertSeverity("warning");
+                    setAlertText("Are you sure you want to delete this venue?");
+                  }}
                   sx={{
                     width: 150,
                     borderRadius: "20px",
