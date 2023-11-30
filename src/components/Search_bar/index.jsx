@@ -21,7 +21,7 @@ function SearchBar() {
   function CreateList({ item }) {
     if (searchValue) {
       return (
-        <Link href={`/contact/${item.id}`} underline='none'>
+        <Link href={`/venue/${item.id}`} underline='none'>
           <Box onClick={clearSearch}>{item.name}</Box>
         </Link>
       );
