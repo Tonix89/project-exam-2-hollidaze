@@ -1,5 +1,13 @@
 import React, { createContext, useState, useEffect } from "react";
-import { Backdrop, CircularProgress, Box, Grid } from "@mui/material";
+import {
+  Backdrop,
+  CircularProgress,
+  Box,
+  Grid,
+  Typography,
+  Stack,
+  Chip,
+} from "@mui/material";
 import GetVenue from "../../../api/Venue";
 import VenueCard from "../../Venue_card";
 import SearchBar from "../../Search_bar";
@@ -11,39 +19,53 @@ export const VenueData = createContext();
 function Home() {
   const [filter, setFilter] = useState([]);
   const [apiLink, setApiLink] = useState(
-    "https://api.noroff.dev/api/v1/holidaze/venues?limit=25",
+    "https://api.noroff.dev/api/v1/holidaze/venues",
   );
   const [venueData, setVenueData] = useState([]);
+
+  const [loader, setLoader] = useState(true);
 
   const getFilterdata = (filterData) => {
     setFilter(filterData);
   };
 
-  const [continent, country, price] = filter;
+  const [continent, country, updated, price, isFilter] = filter;
 
   useEffect(() => {
-    if (price) {
+    if (updated) {
       setApiLink(
-        "https://api.noroff.dev/api/v1/holidaze/venues?sort=price&sortOrder=" +
-          price,
+        "https://api.noroff.dev/api/v1/holidaze/venues?sort=updated&sortOrder=" +
+          updated,
       );
     } else {
       setApiLink("https://api.noroff.dev/api/v1/holidaze/venues");
     }
-  }, [price]);
+  }, [updated]);
 
   const { data, isLoading, isError } = GetVenue(apiLink);
 
   useEffect(() => {
-    const currentUrl = window.location.href;
-    const urlParams = new URLSearchParams(currentUrl);
-    const isFilter = urlParams.get("filter");
+    if (isLoading) {
+      setLoader(true);
+    } else {
+      if (data) {
+        setVenueData(data);
+        setLoader(false);
+      }
+    }
+  }, [isLoading, data]);
+
+  useEffect(() => {
+    if (updated) {
+      setVenueData(data);
+    }
+
     if (isFilter) {
-      if (continent && !country) {
+      if (continent && !country && !price) {
         setVenueData(
           data.filter((venue) => venue.location.continent === continent),
         );
-      } else if (continent && country) {
+      } else if (continent && country && !price) {
         setVenueData(
           data.filter(
             (venue) =>
@@ -51,20 +73,50 @@ function Home() {
               venue.location.country === country,
           ),
         );
-      } else if (country && !continent) {
+      } else if (continent && country && price) {
+        const newData = data.filter(
+          (venue) =>
+            venue.location.continent === continent &&
+            venue.location.country === country,
+        );
+        if (price === "asc") {
+          setVenueData(newData.sort((a, b) => a.price - b.price));
+        } else {
+          setVenueData(newData.sort((a, b) => b.price - a.price));
+        }
+      } else if (!continent && country && price) {
+        const newData = data.filter(
+          (venue) => venue.location.country === country,
+        );
+        if (price === "asc") {
+          setVenueData(newData.sort((a, b) => a.price - b.price));
+        } else {
+          setVenueData(newData.sort((a, b) => b.price - a.price));
+        }
+      } else if (!continent && !country && price) {
+        if (price === "asc") {
+          setVenueData(data.sort((a, b) => a.price - b.price));
+        } else {
+          setVenueData(data.sort((a, b) => b.price - a.price));
+        }
+      } else if (!continent && country && !price) {
         setVenueData(
           data.filter((venue) => venue.location.country === country),
         );
-      } else {
-        setVenueData(data);
+      } else if (continent && !country && price) {
+        const newData = data.filter(
+          (venue) => venue.location.continent === continent,
+        );
+        if (price === "asc") {
+          setVenueData(newData.sort((a, b) => a.price - b.price));
+        } else {
+          setVenueData(newData.sort((a, b) => b.price - a.price));
+        }
       }
-    } else {
-      setVenueData(data);
     }
-    // eslint-disable-next-line
-  }, [filter, data]);
+  }, [data, continent, country, updated, price, isFilter]);
 
-  if (isLoading) {
+  if (loader) {
     return (
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -82,24 +134,34 @@ function Home() {
     <Box sx={{ flexGrow: 1, mt: 1 }}>
       <VenueData.Provider value={data}>
         <SearchBar />
-        <SortFilter filterData={getFilterdata} />
+        <SortFilter filterData={getFilterdata} filter={filter} />
       </VenueData.Provider>
-      <Grid
-        container
-        spacing={{ xs: 2, md: 3 }}
-        columns={{ xs: 4, sm: 8, md: 12 }}>
-        {venueData.map((venue) => (
-          <VenueData.Provider value={venue} key={venue.id}>
-            <Grid item xs={12} sm={4} md={4}>
-              <NavLink
-                to={`/venue/${venue.id}`}
-                style={{ textDecoration: "none" }}>
-                <VenueCard />
-              </NavLink>
-            </Grid>
-          </VenueData.Provider>
-        ))}
-      </Grid>
+      <Stack direction='row' spacing={1} sx={{ mb: 2 }}>
+        {continent && <Chip label='continent' />}
+        {country && <Chip label='country' />}
+        {updated && <Chip label='creation' />}
+        {price && <Chip label='price' />}
+      </Stack>
+      {venueData.length === 0 ? (
+        <Typography>No result found.</Typography>
+      ) : (
+        <Grid
+          container
+          spacing={{ xs: 2, md: 3 }}
+          columns={{ xs: 4, sm: 8, md: 12 }}>
+          {venueData.map((venue) => (
+            <VenueData.Provider value={venue} key={venue.id}>
+              <Grid item xs={12} sm={4} md={4}>
+                <NavLink
+                  to={`/venue/${venue.id}`}
+                  style={{ textDecoration: "none" }}>
+                  <VenueCard />
+                </NavLink>
+              </Grid>
+            </VenueData.Provider>
+          ))}
+        </Grid>
+      )}
     </Box>
   );
 }

@@ -10,7 +10,6 @@ import React, { useState, useContext, useEffect } from "react";
 import TuneOutlinedIcon from "@mui/icons-material/TuneOutlined";
 import theme from "../../styles/theme";
 import { VenueData } from "../Pages/Home";
-import { useNavigate } from "react-router-dom";
 
 const style = {
   position: "absolute",
@@ -27,26 +26,44 @@ const style = {
 };
 
 function SortFilter(props) {
+  const [isContinent, isCountry, isUpdated, isPrice] = props.filter;
   const [open, setOpen] = useState(false);
 
-  const newUrl = useNavigate();
-
   const data = useContext(VenueData);
-  const [continent, setContinent] = useState();
+
+  const [continent, setContinent] = useState("");
   const [continentValue, setContinentValue] = useState("");
   const [continentInput, setContinentInput] = useState("");
+
   const [newData, setNewData] = useState([]);
   const [country, setCountry] = useState("");
   const [countryInput, setCountryInput] = useState("");
+
   const [sortValue, setSortValue] = useState(null);
   const [sortInput, setSortInput] = useState("");
+  const [sort, setSort] = useState(null);
+
+  const [price, setPrice] = useState("");
+  const [sortPrice, setSortPrice] = useState(null);
+  const [sortPriceInput, setSortPriceInput] = useState("");
+
+  const [filter, setFilter] = useState(false);
 
   const sortOptions = [
+    { label: "Newest to Oldest", value: "desc" },
+    { label: "Oldest to Newest", value: "asc" },
+  ];
+
+  const isOptionEqualToValue = (option, sortValue) => {
+    return option.value === sortValue.value;
+  };
+
+  const sortPriceOptions = [
     { label: "Lowest to Highest", value: "asc" },
     { label: "Highest to Lowest", value: "desc" },
   ];
 
-  const isOptionEqualToValue = (option, sortValue) => {
+  const isPriceOptionEqualToValue = (option, sortValue) => {
     return option.value === sortValue.value;
   };
 
@@ -56,47 +73,36 @@ function SortFilter(props) {
 
   useEffect(() => {
     if (continent) {
-      // eslint-disable-next-line
       setNewData(
         data.filter((venue) => venue.location.continent === continent),
       );
     } else {
       setNewData(data);
     }
-    // eslint-disable-next-line
-  }, [continent]);
+  }, [data, continent]);
+
+  useEffect(() => {
+    if (continent || country || sortValue || sortPrice) {
+      setFilter(true);
+    }
+
+    if (sortValue) {
+      setSort(sortValue.value);
+    } else {
+      setSort(null);
+    }
+
+    if (sortPrice) {
+      setPrice(sortPrice.value);
+    } else {
+      setPrice("");
+    }
+  }, [continent, country, sortValue, sortInput, sortPriceInput, sortPrice]);
 
   const saveFilter = () => {
-    if (sortValue) {
-      props.filterData([continentValue, country, sortValue.value]);
-    } else {
-      props.filterData([continentValue, country, sortValue]);
+    if (filter) {
+      props.filterData([continent, country, sort, price, filter]);
     }
-
-    if (continentValue || country || sortValue) {
-      if (continentValue && country && !sortValue) {
-        newUrl(`?&filter=true&continent=${continentValue}&country=${country}`);
-      } else if (continentValue && !country && !sortValue) {
-        newUrl(`?&filter=true&continent=${continentValue}`);
-      } else if (!continentValue && !country && sortValue) {
-        newUrl(`?&filter=true&price=${sortValue.value}`);
-      } else if (!continentValue && country && !sortValue) {
-        newUrl(`?&filter=true&country=${country}`);
-      } else if (!continentValue && country && sortValue) {
-        newUrl(`?&filter=true&country=${country}&price=${sortValue.value}`);
-      } else if (continentValue && !country && sortValue) {
-        newUrl(
-          `?&filter=true&continent=${continentValue}&price=${sortValue.value}`,
-        );
-      } else {
-        newUrl(
-          `?&filter=true&continent=${continentValue}&country=${country}&price=${sortValue.value}`,
-        );
-      }
-    } else {
-      newUrl("");
-    }
-
     setOpen(false);
   };
 
@@ -106,33 +112,38 @@ function SortFilter(props) {
 
   const handleOpen = () => {
     setOpen(true);
-    const currentUrl = window.location.href;
 
-    const urlParams = new URLSearchParams(currentUrl);
-
-    const isContinent = urlParams.get("continent");
     if (isContinent) {
       setContinent(isContinent);
       setContinentInput(isContinent);
       setContinentValue(isContinent);
     }
-    const isCountry = urlParams.get("country");
+
     if (isCountry) {
       setCountryInput(isCountry);
       setCountry(isCountry);
     }
-    const isPrice = urlParams.get("price");
-    if (isPrice) {
-      if (isPrice === "asc") {
-        setSortValue({ label: "Lowest to Highest", value: "asc" });
-        setSortInput("Lowest to Highest");
-      } else if (isPrice === "desc") {
-        setSortValue({ label: "Highest to Lowest", value: "desc" });
-        setSortInput("Highest to Lowest");
-      } else {
-        setSortInput("");
-        setSortValue(null);
-      }
+
+    if (isUpdated === "desc") {
+      setSortValue({ label: "Newest to Oldest", value: "desc" });
+      setSortInput("Newest to Oldest");
+    } else if (isUpdated === "asc") {
+      setSortValue({ label: "Oldest to Newest", value: "asc" });
+      setSortInput("Oldest to Newest");
+    } else {
+      setSortInput("");
+      setSortValue(null);
+    }
+
+    if (isPrice === "asc") {
+      setSortPrice({ label: "Lowest to Highest", value: "asc" });
+      setSortPriceInput("Lowest to Highest");
+    } else if (isPrice === "desc") {
+      setSortPrice({ label: "Highest to Lowest", value: "desc" });
+      setSortPriceInput("Highest to Lowest");
+    } else {
+      setSortPriceInput("");
+      setSortPrice(null);
     }
   };
   const handleClose = () => setOpen(false);
@@ -166,17 +177,16 @@ function SortFilter(props) {
               value={continentValue}
               onChange={(e, newContinentValue) => {
                 setContinentValue(newContinentValue);
+                setContinent(newContinentValue);
               }}
               inputValue={continentInput}
               onInputChange={(e, newValue) => {
                 setContinentInput(newValue);
-                setContinent(newValue);
                 setCountry("");
               }}
               id='continent-option'
               options={continentOption}
               sx={{
-                width: 300,
                 border: "1px solid",
                 borderColor: theme.palette.primary.main,
                 borderRadius: "10px",
@@ -201,7 +211,6 @@ function SortFilter(props) {
               id='country-option'
               options={countryOption}
               sx={{
-                width: 300,
                 border: "1px solid",
                 borderColor: theme.palette.primary.main,
                 borderRadius: "10px",
@@ -211,7 +220,7 @@ function SortFilter(props) {
           </Box>
           <Box sx={{ mt: 2 }}>
             <Typography variant='h6' component='h2' sx={{ fontWeight: "bold" }}>
-              Price
+              Creation
             </Typography>
             <Autocomplete
               value={sortValue}
@@ -227,7 +236,31 @@ function SortFilter(props) {
               }}
               id='sort-option'
               sx={{
-                width: 300,
+                border: "1px solid",
+                borderColor: theme.palette.primary.main,
+                borderRadius: "10px",
+              }}
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </Box>
+          <Box sx={{ mt: 2 }}>
+            <Typography variant='h6' component='h2' sx={{ fontWeight: "bold" }}>
+              Price
+            </Typography>
+            <Autocomplete
+              value={sortPrice}
+              options={sortPriceOptions}
+              getOptionLabel={(option) => option.label}
+              isOptionEqualToValue={isPriceOptionEqualToValue}
+              onChange={(e, newSortValue) => {
+                setSortPrice(newSortValue);
+              }}
+              inputValue={sortPriceInput}
+              onInputChange={(e, newValue) => {
+                setSortPriceInput(newValue);
+              }}
+              id='sort-price-option'
+              sx={{
                 border: "1px solid",
                 borderColor: theme.palette.primary.main,
                 borderRadius: "10px",
