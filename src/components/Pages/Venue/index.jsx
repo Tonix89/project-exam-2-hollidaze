@@ -22,6 +22,8 @@ import Login from "../../Login";
 import SignUp from "../../Sign_up";
 import delApi from "../../../api/Delete";
 import CloseIcon from "@mui/icons-material/Close";
+import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
+import BookingInfo from "../../Modal/Booking";
 
 function SingleVenue() {
   const token = localStorage.getItem("holiToken");
@@ -39,9 +41,11 @@ function SingleVenue() {
   const loginClose = () => setOpenLogin(false);
 
   const [alert, setAlert] = useState(false);
-
   const [alertText, setAlertText] = useState("");
   const [alertSeverity, setAlertSeverity] = useState("warning");
+
+  const [bookingInfoModal, setBookingInfoModal] = useState(false);
+  const closeBookingInfoModal = () => setBookingInfoModal(false);
 
   const notLoggedIn = () => {
     alert("You must login first in order to make bookings.");
@@ -77,7 +81,7 @@ function SingleVenue() {
   const url =
     "https://api.noroff.dev/api/v1/holidaze/venues/" +
     params.id +
-    "?_owner=true&_bookings=true";
+    "?_owner=true&_bookings=true&_customer=true";
 
   const { data, isLoading, isError } = GetVenue(url);
 
@@ -443,47 +447,111 @@ function SingleVenue() {
               </Box>
             </Box>
             {user === data.owner.name ? (
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: { xs: "column", md: "row" },
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 3,
-                }}>
-                <NavLink to={`/venue/edit/${params.id}`}>
+              <Box sx={{ mt: 2 }}>
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <Typography
+                    gutterBottom
+                    sx={{
+                      fontWeight: "bold",
+                      fontSize: { xs: "16px", sm: "20px" },
+                      m: 0,
+                    }}>
+                    Total Bookings :
+                  </Typography>
+                  {data.bookings.length !== 0 ? (
+                    <Button
+                      variant='outlined'
+                      onClick={() => setBookingInfoModal(true)}
+                      sx={{
+                        p: 0,
+                        minWidth: "70px",
+                        ml: 2,
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}>
+                      <Typography
+                        gutterBottom
+                        variant='h6'
+                        sx={{
+                          fontWeight: "bold",
+                          m: 0,
+                          pl: 1,
+                        }}>
+                        {data.bookings.length}
+                      </Typography>
+                      <MoreVertRoundedIcon />
+                    </Button>
+                  ) : (
+                    <Typography
+                      gutterBottom
+                      sx={{
+                        fontWeight: "bold",
+                        fontSize: { xs: "16px", sm: "20px" },
+                        m: 0,
+                        pl: 1,
+                      }}>
+                      No bookings yet.
+                    </Typography>
+                  )}
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: { xs: "column", md: "row" },
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 3,
+                    mt: 2,
+                  }}>
+                  <NavLink to={`/venue/edit/${params.id}`}>
+                    <Button
+                      variant='contained'
+                      sx={{
+                        width: 150,
+                        borderRadius: "20px",
+                        fontWeight: "bold",
+                      }}>
+                      Edit Venue
+                    </Button>
+                  </NavLink>
                   <Button
                     variant='contained'
+                    onClick={() => {
+                      setAlert(true);
+                      setAlertSeverity("warning");
+                      setAlertText(
+                        "Are you sure you want to delete this venue?",
+                      );
+                    }}
                     sx={{
                       width: 150,
                       borderRadius: "20px",
                       fontWeight: "bold",
                     }}>
-                    Edit Venue
+                    Delete Venue
                   </Button>
-                </NavLink>
-                <Button
-                  variant='contained'
-                  onClick={() => {
-                    setAlert(true);
-                    setAlertSeverity("warning");
-                    setAlertText("Are you sure you want to delete this venue?");
-                  }}
-                  sx={{
-                    width: 150,
-                    borderRadius: "20px",
-                    fontWeight: "bold",
-                  }}>
-                  Delete Venue
-                </Button>
+                </Box>
               </Box>
             ) : (
-              <Box
-                sx={{
-                  textAlign: "center",
-                }}>
-                {token ? (
-                  <NavLink to={`/booking/${params.id}`}>
+              <>
+                <Box
+                  sx={{
+                    textAlign: "center",
+                  }}>
+                  {token ? (
+                    <NavLink to={`/booking/${params.id}`}>
+                      <Button
+                        variant='contained'
+                        sx={{
+                          width: 150,
+                          borderRadius: "20px",
+                          fontWeight: "bold",
+                          my: 2,
+                        }}>
+                        Book Now
+                      </Button>
+                    </NavLink>
+                  ) : (
                     <Button
                       variant='contained'
                       sx={{
@@ -491,73 +559,67 @@ function SingleVenue() {
                         borderRadius: "20px",
                         fontWeight: "bold",
                         my: 2,
-                      }}>
+                      }}
+                      onClick={notLoggedIn}>
                       Book Now
                     </Button>
-                  </NavLink>
-                ) : (
-                  <Button
-                    variant='contained'
-                    sx={{
-                      width: 150,
-                      borderRadius: "20px",
-                      fontWeight: "bold",
-                      my: 2,
-                    }}
-                    onClick={notLoggedIn}>
-                    Book Now
-                  </Button>
-                )}
-              </Box>
-            )}
-            <Box
-              sx={{
-                textAlign: { xs: "start", sm: "center" },
-              }}>
-              <Typography
-                gutterBottom
-                variant='body1'
-                component='div'
-                sx={{
-                  fontWeight: "bold",
-                  my: 2,
-                }}>
-                Have Questions? Contact Owner :
-              </Typography>
-              <Box>
+                  )}
+                </Box>
                 <Box
                   sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: { xs: "start", sm: "center" },
-                    gap: 3,
-                    mb: 2,
+                    textAlign: { xs: "start", sm: "center" },
                   }}>
-                  <Avatar alt={data.owner.name} src={data.owner.avatar} />
                   <Typography
                     gutterBottom
                     variant='body1'
                     component='div'
                     sx={{
                       fontWeight: "bold",
+                      my: 2,
                     }}>
-                    {data.owner.name}
+                    Have Questions? Contact Owner :
                   </Typography>
+                  <Box>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: { xs: "start", sm: "center" },
+                        gap: 3,
+                        mb: 2,
+                      }}>
+                      <Avatar alt={data.owner.name} src={data.owner.avatar} />
+                      <Typography
+                        gutterBottom
+                        variant='body1'
+                        component='div'
+                        sx={{
+                          fontWeight: "bold",
+                        }}>
+                        {data.owner.name}
+                      </Typography>
+                    </Box>
+                    <Typography
+                      gutterBottom
+                      variant='body2'
+                      component='div'
+                      sx={{
+                        fontWeight: "bold",
+                      }}>
+                      Email : {data.owner.email}
+                    </Typography>
+                  </Box>
                 </Box>
-                <Typography
-                  gutterBottom
-                  variant='body2'
-                  component='div'
-                  sx={{
-                    fontWeight: "bold",
-                  }}>
-                  Email : {data.owner.email}
-                </Typography>
-              </Box>
-            </Box>
+              </>
+            )}
           </Box>
         </CardContent>
       </Card>
+      <BookingInfo
+        value={data.bookings}
+        open={bookingInfoModal}
+        handleClose={closeBookingInfoModal}
+      />
       <Login open={openLogin} loginClose={loginClose} signUpOpen={signUpOpen} />
       <SignUp
         open={openSignup}
