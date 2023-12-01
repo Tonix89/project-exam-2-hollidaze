@@ -12,9 +12,12 @@ import {
   Stack,
   Backdrop,
   CircularProgress,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import theme from "../../../styles/theme";
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import CloseIcon from "@mui/icons-material/Close";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { createVenueSchema } from "../../../tools/Validation";
@@ -34,6 +37,9 @@ function VenueCreate() {
   const [imageError, setImageError] = useState("");
   const [imageUrl, setImageUrl] = useState([]);
   const [imageInput, setImageInput] = useState("");
+
+  const [alert, setAlert] = useState(false);
+  const [alertText, setAlertText] = useState("");
 
   const handleAddImage = () => {
     const imageInput = document.getElementById("image").value;
@@ -111,7 +117,8 @@ function VenueCreate() {
           window.location.href = "/success/venue_create";
         } else {
           setLoader(false);
-          alert("Sorry, we have an error registering your booking. ");
+          setAlert(true);
+          setAlertText("Error: " + res.message);
         }
       });
     } else {
@@ -141,6 +148,35 @@ function VenueCreate() {
         borderColor: theme.palette.secondary.main,
         width: { xs: "100%", md: "60%" },
       }}>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={alert}>
+        <Box sx={{ width: "100%" }}>
+          <Snackbar
+            open={alert}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}>
+            <Alert
+              variant='filled'
+              severity='error'
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                "& .MuiAlert-message": {
+                  display: "flex",
+                  alignItems: "center",
+                },
+              }}>
+              <Typography>{alertText}</Typography>
+              <Button
+                color='inherit'
+                size='small'
+                onClick={() => setAlert(false)}>
+                <CloseIcon color='inherit' size='small' />
+              </Button>
+            </Alert>
+          </Snackbar>
+        </Box>
+      </Backdrop>
       <Box
         onSubmit={handleSubmit(onSubmit)}
         component='form'

@@ -92,6 +92,7 @@ export const createVenueSchema = yup.object({
   guests: yup
     .number()
     .positive("Must be a positive number.")
+    .max(100, "Maximum guests should not be more than 100.")
     .integer("Must be a whole number.")
     .required("Must not be empty.")
     .typeError("Must be a number."),
