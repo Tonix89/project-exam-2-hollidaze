@@ -62,6 +62,7 @@ function Profile() {
 
   const [value, setValue] = useState(0);
   const [futureBookings, setFutureBookings] = useState([]);
+  const [pastBookings, setPastBookings] = useState([]);
 
   const [openEditProfile, setOpenEditProfile] = useState(false);
   const editModalOpen = () => setOpenEditProfile(true);
@@ -81,19 +82,35 @@ function Profile() {
   useEffect(() => {
     if (data.bookings) {
       const currentDate = new Date().getTime();
-      const bookingArray = data.bookings.filter((booking) => {
-        const bookingDate = new Date(booking.dateFrom).getTime();
+      const futureBookingArray = data.bookings.filter((booking) => {
+        const bookingDate = new Date(booking.dateTo).getTime();
         if (bookingDate > currentDate) {
           return true;
         } else {
           return false;
         }
       });
-      const sortBookingsArray = bookingArray.sort(
+
+      const sortFutureBookingsArray = futureBookingArray.sort(
         (a, b) =>
           new Date(a.dateFrom).getTime() - new Date(b.dateFrom).getTime(),
       );
-      setFutureBookings(sortBookingsArray);
+      setFutureBookings(sortFutureBookingsArray);
+
+      const pastBookingArray = data.bookings.filter((booking) => {
+        const bookingDate = new Date(booking.dateTo).getTime();
+        if (bookingDate < currentDate) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+
+      const sortPastBookingsArray = pastBookingArray.sort(
+        (a, b) =>
+          new Date(b.dateFrom).getTime() - new Date(a.dateFrom).getTime(),
+      );
+      setPastBookings(sortPastBookingsArray);
     }
   }, [data]);
 
@@ -258,7 +275,26 @@ function Profile() {
           </Box>
         </MenuTab>
         <MenuTab value={value} index={data.venueManager ? 2 : 1}>
-          User past bookings
+          <Grid
+            container
+            spacing={{ xs: 2, md: 1 }}
+            columns={{ xs: 4, sm: 8, md: 12 }}>
+            {pastBookings.map((booking) => (
+              <Grid
+                key={booking.id}
+                item
+                xs={12}
+                sm={4}
+                md={6}
+                sx={{ width: "-webkit-fill-available" }}>
+                <NavLink
+                  to={`/venue/${booking.venue.id}`}
+                  style={{ textDecoration: "none" }}>
+                  <BookingCard value={booking} />
+                </NavLink>
+              </Grid>
+            ))}
+          </Grid>
         </MenuTab>
       </Box>
       <EditProfile data={data} open={openEditProfile} close={editModalClose} />
