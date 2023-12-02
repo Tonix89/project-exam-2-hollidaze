@@ -83,7 +83,7 @@ export const createVenueSchema = yup.object({
   description: yup
     .string()
     .min(25, "Must be at least 25 characters.")
-    .max(200, "Must not be more than 200 characters.")
+    .max(250, "Must not be more than 250 characters.")
     .required("Must not be empty."),
   price: yup
     .number()
