@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import {
   Box,
@@ -61,6 +61,7 @@ function Profile() {
   }
 
   const [value, setValue] = useState(0);
+  const [futureBookings, setFutureBookings] = useState([]);
 
   const [openEditProfile, setOpenEditProfile] = useState(false);
   const editModalOpen = () => setOpenEditProfile(true);
@@ -76,6 +77,25 @@ function Profile() {
     "?_bookings=true&_venues=true";
 
   const { data, isLoading, isError } = GetApi(url);
+
+  useEffect(() => {
+    if (data.bookings) {
+      const currentDate = new Date().getTime();
+      const bookingArray = data.bookings.filter((booking) => {
+        const bookingDate = new Date(booking.dateFrom).getTime();
+        if (bookingDate > currentDate) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      const sortBookingsArray = bookingArray.sort(
+        (a, b) =>
+          new Date(a.dateFrom).getTime() - new Date(b.dateFrom).getTime(),
+      );
+      setFutureBookings(sortBookingsArray);
+    }
+  }, [data]);
 
   if (isLoading) {
     return (
@@ -167,7 +187,7 @@ function Profile() {
             container
             spacing={{ xs: 2, md: 1 }}
             columns={{ xs: 4, sm: 8, md: 12 }}>
-            {data.bookings.map((booking) => (
+            {futureBookings.map((booking) => (
               <Grid
                 key={booking.id}
                 item
