@@ -31,13 +31,14 @@ export const signUpSchema = yup.object({
     .string()
     .min(8, "Must be at least 8 characters")
     .required("Must not be empty."),
-  avatar: yup.string().url("Invalid URL format").required("Must not be empty."),
+  venueManager: yup.boolean().required(),
 });
 
 export const validateImageUrlSchema = yup
   .object({
     image: yup
       .string()
+      .required("Must not be empty.")
       .url("Image must be a valid URL.")
       .test("is-image-url", "Image URL must be a valid image URL.", (value) =>
         isImageURL(value),
@@ -58,6 +59,7 @@ export const validateImageUrlSchema = yup
 export const venueMangerSchema = yup.object({
   venueMager: yup.boolean().required(),
 });
+
 export const loginSchema = yup.object({
   email: yup
     .string()
@@ -76,7 +78,7 @@ export const createVenueSchema = yup.object({
   name: yup
     .string()
     .min(8, "Must be at least 8 characters.")
-    .max(30, "Must not be more than 30 characters.")
+    .max(50, "Must not be more than 50 characters.")
     .required("Must not be empty."),
   description: yup
     .string()
