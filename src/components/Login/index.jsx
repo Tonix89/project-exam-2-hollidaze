@@ -8,8 +8,11 @@ import {
   TextField,
   Backdrop,
   CircularProgress,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import CancelSharpIcon from "@mui/icons-material/CancelSharp";
+import CloseIcon from "@mui/icons-material/Close";
 import { dialogStyle } from "../../styles/dialog";
 import theme from "../../styles/theme";
 import { useForm } from "react-hook-form";
@@ -31,6 +34,10 @@ function Login(props) {
     setOpenLoader(true);
   };
 
+  const [alert, setAlert] = useState(false);
+  const [alertText, setAlertText] = useState("");
+  const [alertSeverity, setAlertSeverity] = useState("error");
+
   const {
     register,
     handleSubmit,
@@ -51,15 +58,26 @@ function Login(props) {
     };
 
     postApi(url, bodyData).then((res) => {
-      if (res.errors) {
-        loaderClose();
-        alert(res.errors[0].message);
+      if (res.message) {
+        setAlertSeverity("error");
+        setAlert(true);
+        setAlertText("Error: " + res.message);
+      } else if (res.errors) {
+        setAlertText("Error: " + res.errors[0].message);
+        setAlertSeverity("error");
+        setAlert(true);
       } else {
-        alert("Welcome " + res.name);
+        setAlertText("Welcome " + res.name);
+        setAlertSeverity("success");
         localStorage.setItem("holiToken", res.accessToken);
         localStorage.setItem("holiUser", res.name);
-        window.location.reload();
+        setAlert(true);
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
       }
+
+      loaderClose();
     });
   }
 
@@ -73,6 +91,33 @@ function Login(props) {
         aria-labelledby='scroll-dialog-title'
         aria-describedby='scroll-dialog-description'>
         <DialogContent>
+          <Box sx={{ width: "100%" }}>
+            <Snackbar
+              open={alert}
+              autoHideDuration={6000}
+              onClose={() => setAlert(false)}
+              anchorOrigin={{ vertical: "top", horizontal: "center" }}>
+              <Alert
+                variant='filled'
+                severity={alertSeverity}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  "& .MuiAlert-message": {
+                    display: "flex",
+                    alignItems: "center",
+                  },
+                }}>
+                <Typography>{alertText}</Typography>
+                <Button
+                  color='inherit'
+                  size='small'
+                  onClick={() => setAlert(false)}>
+                  <CloseIcon color='inherit' size='small' />
+                </Button>
+              </Alert>
+            </Snackbar>
+          </Box>
           <Backdrop
             sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
             open={openLoader}>
