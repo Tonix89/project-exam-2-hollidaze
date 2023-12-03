@@ -7,7 +7,10 @@ import {
   Typography,
   Stack,
   Chip,
+  Button,
 } from "@mui/material";
+import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
+import ExpandLessOutlinedIcon from "@mui/icons-material/ExpandLessOutlined";
 import GetVenue from "../../../api/Venue";
 import VenueCard from "../../Venue_card";
 import SearchBar from "../../Search_bar";
@@ -17,13 +20,21 @@ import { NavLink } from "react-router-dom";
 export const VenueData = createContext();
 
 function Home() {
+  const [loader, setLoader] = useState(true);
   const [filter, setFilter] = useState([]);
   const [apiLink, setApiLink] = useState(
     "https://api.noroff.dev/api/v1/holidaze/venues",
   );
   const [venueData, setVenueData] = useState([]);
+  const [showLimit, setShowLimit] = useState(11);
 
-  const [loader, setLoader] = useState(true);
+  const handleAddLimit = () => {
+    setShowLimit(showLimit + 12);
+  };
+
+  const handleMinusLimit = () => {
+    setShowLimit(showLimit - 12);
+  };
 
   const getFilterdata = (filterData) => {
     setFilter(filterData);
@@ -149,19 +160,49 @@ function Home() {
           container
           spacing={{ xs: 2, md: 3 }}
           columns={{ xs: 4, sm: 8, md: 12 }}>
-          {venueData.map((venue) => (
-            <VenueData.Provider value={venue} key={venue.id}>
-              <Grid item xs={12} sm={4} md={4}>
-                <NavLink
-                  to={`/venue/${venue.id}`}
-                  style={{ textDecoration: "none" }}>
-                  <VenueCard />
-                </NavLink>
-              </Grid>
-            </VenueData.Provider>
-          ))}
+          {venueData.map(
+            (venue, i) =>
+              i <= showLimit && (
+                <VenueData.Provider value={venue} key={venue.id}>
+                  <Grid item xs={12} sm={4} md={4}>
+                    <NavLink
+                      to={`/venue/${venue.id}`}
+                      style={{ textDecoration: "none" }}>
+                      <VenueCard />
+                    </NavLink>
+                  </Grid>
+                </VenueData.Provider>
+              ),
+          )}
         </Grid>
       )}
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          my: 2,
+          gap: 2,
+          justifyContent: "center",
+        }}>
+        {showLimit <= 98 && (
+          <Button
+            variant='outlined'
+            startIcon={<ExpandMoreOutlinedIcon />}
+            onClick={handleAddLimit}
+            sx={{ fontWeight: "bold", border: "2px solid" }}>
+            Show More
+          </Button>
+        )}
+        {showLimit > 11 && (
+          <Button
+            variant='outlined'
+            startIcon={<ExpandLessOutlinedIcon />}
+            onClick={handleMinusLimit}
+            sx={{ fontWeight: "bold", border: "2px solid" }}>
+            Show Less
+          </Button>
+        )}
+      </Box>
     </Box>
   );
 }
