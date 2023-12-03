@@ -4,6 +4,7 @@ import { useParams, NavLink } from "react-router-dom";
 import {
   Box,
   Card,
+  CardActionArea,
   CardMedia,
   CardContent,
   Rating,
@@ -25,6 +26,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import BookingInfo from "../../Modal/Booking";
 import { Helmet, HelmetProvider } from "react-helmet-async";
+import ImageModal from "../../Modal/Image";
 
 function SingleVenue() {
   const token = localStorage.getItem("holiToken");
@@ -47,6 +49,9 @@ function SingleVenue() {
 
   const [bookingInfoModal, setBookingInfoModal] = useState(false);
   const closeBookingInfoModal = () => setBookingInfoModal(false);
+
+  const [imgModal, setImgModal] = useState(false);
+  const closeImgModal = () => setImgModal(false);
 
   const handleDeleteVenue = () => {
     setAlert(false);
@@ -119,17 +124,33 @@ function SingleVenue() {
           <meta name='description' content={data.description} />
           <link rel='canonical' href='https://holidazetonix.netlify.app/' />
         </Helmet>
-        <CardMedia
-          component='img'
-          image={data.media[0]}
-          alt={data.name}
-          sx={{
-            p: 0.5,
-            width: "-webkit-fill-available",
-            borderRadius: "10px",
-            maxHeight: { xs: "300px", md: "500px" },
-          }}
-        />
+        {data.media.length !== 0 ? (
+          <CardActionArea onClick={() => setImgModal(true)}>
+            <CardMedia
+              component='img'
+              image={data.media[0]}
+              alt={data.name}
+              sx={{
+                p: 0.5,
+                width: "-webkit-fill-available",
+                borderRadius: "10px",
+                maxHeight: { xs: "300px", md: "500px" },
+              }}
+            />
+          </CardActionArea>
+        ) : (
+          <CardMedia
+            component='img'
+            image={data.media[0]}
+            alt={data.name}
+            sx={{
+              p: 0.5,
+              width: "-webkit-fill-available",
+              borderRadius: "10px",
+              maxHeight: { xs: "300px", md: "500px" },
+            }}
+          />
+        )}
         <CardContent>
           <Backdrop
             sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -634,6 +655,9 @@ function SingleVenue() {
         signUpClose={signUpClose}
         loginOpen={loginOpen}
       />
+      {data.media.length !== 0 && (
+        <ImageModal open={imgModal} data={data} handleClose={closeImgModal} />
+      )}
     </HelmetProvider>
   );
 }
