@@ -48,11 +48,6 @@ function SingleVenue() {
   const [bookingInfoModal, setBookingInfoModal] = useState(false);
   const closeBookingInfoModal = () => setBookingInfoModal(false);
 
-  const notLoggedIn = () => {
-    alert("You must login first in order to make bookings.");
-    setOpenLogin(true);
-  };
-
   const handleDeleteVenue = () => {
     setAlert(false);
     setLoader(true);
@@ -97,7 +92,7 @@ function SingleVenue() {
   }
 
   if (isError) {
-    return <Box>Sorry, we have an error. {data.message}.</Box>;
+    return <Box>Sorry, we have an error. {data.message}...</Box>;
   }
 
   let city = "City";
@@ -567,7 +562,11 @@ function SingleVenue() {
                         fontWeight: "bold",
                         my: 2,
                       }}
-                      onClick={notLoggedIn}>
+                      onClick={() => {
+                        setAlert(true);
+                        setAlertSeverity("error");
+                        setAlertText("You must login first.");
+                      }}>
                       Book Now
                     </Button>
                   )}
@@ -622,11 +621,13 @@ function SingleVenue() {
           </Box>
         </CardContent>
       </Card>
-      <BookingInfo
-        value={data.bookings}
-        open={bookingInfoModal}
-        handleClose={closeBookingInfoModal}
-      />
+      {token && user === data.owner.name && (
+        <BookingInfo
+          value={data.bookings}
+          open={bookingInfoModal}
+          handleClose={closeBookingInfoModal}
+        />
+      )}
       <Login open={openLogin} loginClose={loginClose} signUpOpen={signUpOpen} />
       <SignUp
         open={openSignup}

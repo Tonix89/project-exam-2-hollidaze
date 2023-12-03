@@ -16,6 +16,7 @@ import VenueCard from "../../Venue_card";
 import SearchBar from "../../Search_bar";
 import SortFilter from "../../Sort_filter";
 import { NavLink } from "react-router-dom";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 
 export const VenueData = createContext();
 
@@ -23,7 +24,7 @@ function Home() {
   const [loader, setLoader] = useState(true);
   const [filter, setFilter] = useState([]);
   const [apiLink, setApiLink] = useState(
-    "https://api.noroff.dev/api/v1/holidaze/venues",
+    "http://api.noroff.dev/api/v1/holidaze/venues",
   );
   const [venueData, setVenueData] = useState([]);
   const [showLimit, setShowLimit] = useState(11);
@@ -45,11 +46,11 @@ function Home() {
   useEffect(() => {
     if (updated) {
       setApiLink(
-        "https://api.noroff.dev/api/v1/holidaze/venues?sort=updated&sortOrder=" +
+        "http://api.noroff.dev/api/v1/holidaze/venues?sort=updated&sortOrder=" +
           updated,
       );
     } else {
-      setApiLink("https://api.noroff.dev/api/v1/holidaze/venues");
+      setApiLink("http://api.noroff.dev/api/v1/holidaze/venues");
     }
   }, [updated]);
 
@@ -138,72 +139,82 @@ function Home() {
   }
 
   if (isError) {
-    return <Box>Sorry, we have an error. {data.message}.</Box>;
+    return <Box>Sorry, we have an error. {data.message} </Box>;
   }
 
   return (
-    <Box sx={{ flexGrow: 1, mt: 1 }}>
-      <VenueData.Provider value={data}>
-        <SearchBar />
-        <SortFilter filterData={getFilterdata} filter={filter} />
-      </VenueData.Provider>
-      <Stack direction='row' spacing={1} sx={{ mb: 2 }}>
-        {continent && <Chip label='continent' />}
-        {country && <Chip label='country' />}
-        {updated && <Chip label='creation' />}
-        {price && <Chip label='price' />}
-      </Stack>
-      {venueData.length === 0 ? (
-        <Typography>No result found.</Typography>
-      ) : (
-        <Grid
-          container
-          spacing={{ xs: 2, md: 3 }}
-          columns={{ xs: 4, sm: 8, md: 12 }}>
-          {venueData.map(
-            (venue, i) =>
-              i <= showLimit && (
-                <VenueData.Provider value={venue} key={venue.id}>
-                  <Grid item xs={12} sm={4} md={4}>
-                    <NavLink
-                      to={`/venue/${venue.id}`}
-                      style={{ textDecoration: "none" }}>
-                      <VenueCard />
-                    </NavLink>
-                  </Grid>
-                </VenueData.Provider>
-              ),
+    <HelmetProvider>
+      <Box sx={{ flexGrow: 1, mt: 1 }}>
+        <Helmet>
+          <meta charSet='utf-8' />
+          <title>Holidaze</title>
+          <meta
+            name='description'
+            content='Holidaze is venue managing and booking website.'
+          />
+        </Helmet>
+        <VenueData.Provider value={data}>
+          <SearchBar />
+          <SortFilter filterData={getFilterdata} filter={filter} />
+        </VenueData.Provider>
+        <Stack direction='row' spacing={1} sx={{ mb: 2 }}>
+          {continent && <Chip label='continent' />}
+          {country && <Chip label='country' />}
+          {updated && <Chip label='creation' />}
+          {price && <Chip label='price' />}
+        </Stack>
+        {venueData.length === 0 ? (
+          <Typography>No result found.</Typography>
+        ) : (
+          <Grid
+            container
+            spacing={{ xs: 2, md: 3 }}
+            columns={{ xs: 4, sm: 8, md: 12 }}>
+            {venueData.map(
+              (venue, i) =>
+                i <= showLimit && (
+                  <VenueData.Provider value={venue} key={venue.id}>
+                    <Grid item xs={12} sm={4} md={4}>
+                      <NavLink
+                        to={`/venue/${venue.id}`}
+                        style={{ textDecoration: "none" }}>
+                        <VenueCard />
+                      </NavLink>
+                    </Grid>
+                  </VenueData.Provider>
+                ),
+            )}
+          </Grid>
+        )}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            my: 2,
+            gap: 2,
+            justifyContent: "center",
+          }}>
+          {showLimit <= 98 && (
+            <Button
+              variant='outlined'
+              startIcon={<ExpandMoreOutlinedIcon />}
+              onClick={handleAddLimit}
+              sx={{ fontWeight: "bold", border: "2px solid" }}>
+              Show More
+            </Button>
           )}
-        </Grid>
-      )}
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          my: 2,
-          gap: 2,
-          justifyContent: "center",
-        }}>
-        {showLimit <= 98 && (
-          <Button
-            variant='outlined'
-            startIcon={<ExpandMoreOutlinedIcon />}
-            onClick={handleAddLimit}
-            sx={{ fontWeight: "bold", border: "2px solid" }}>
-            Show More
-          </Button>
-        )}
-        {showLimit > 11 && (
-          <Button
-            variant='outlined'
-            startIcon={<ExpandLessOutlinedIcon />}
-            onClick={handleMinusLimit}
-            sx={{ fontWeight: "bold", border: "2px solid" }}>
-            Show Less
-          </Button>
-        )}
+          {showLimit > 11 && (
+            <Button
+              variant='outlined'
+              startIcon={<ExpandLessOutlinedIcon />}
+              onClick={handleMinusLimit}
+              sx={{ fontWeight: "bold", border: "2px solid" }}>
+              Show Less
+            </Button>
+          )}
+        </Box>
       </Box>
-    </Box>
+    </HelmetProvider>
   );
 }
 
