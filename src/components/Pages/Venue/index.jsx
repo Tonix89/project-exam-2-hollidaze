@@ -24,6 +24,7 @@ import delApi from "../../../api/Delete";
 import CloseIcon from "@mui/icons-material/Close";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import BookingInfo from "../../Modal/Booking";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 
 function SingleVenue() {
   const token = localStorage.getItem("holiToken");
@@ -114,9 +115,15 @@ function SingleVenue() {
   }
 
   return (
-    <>
+    <HelmetProvider>
       <Card
         sx={{ border: "1px solid", borderColor: theme.palette.secondary.main }}>
+        <Helmet>
+          <meta charSet='utf-8' />
+          <title>{data.name}</title>
+          <meta name='description' content={data.description} />
+          <link rel='canonical' href='https://holidazetonix.netlify.app/' />
+        </Helmet>
         <CardMedia
           component='img'
           image={data.media[0]}
@@ -626,7 +633,7 @@ function SingleVenue() {
         signUpClose={signUpClose}
         loginOpen={loginOpen}
       />
-    </>
+    </HelmetProvider>
   );
 }
 
