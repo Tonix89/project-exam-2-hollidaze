@@ -24,7 +24,7 @@ function Home() {
   const [loader, setLoader] = useState(true);
   const [filter, setFilter] = useState([]);
   const [apiLink, setApiLink] = useState(
-    "http://api.noroff.dev/api/v1/holidaze/venues",
+    "https://api.noroff.dev/api/v1/holidaze/venues",
   );
   const [venueData, setVenueData] = useState([]);
   const [showLimit, setShowLimit] = useState(11);
@@ -46,11 +46,11 @@ function Home() {
   useEffect(() => {
     if (updated) {
       setApiLink(
-        "http://api.noroff.dev/api/v1/holidaze/venues?sort=updated&sortOrder=" +
+        "https://api.noroff.dev/api/v1/holidaze/venues?sort=updated&sortOrder=" +
           updated,
       );
     } else {
-      setApiLink("http://api.noroff.dev/api/v1/holidaze/venues");
+      setApiLink("https://api.noroff.dev/api/v1/holidaze/venues");
     }
   }, [updated]);
 
