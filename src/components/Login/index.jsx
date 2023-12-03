@@ -10,8 +10,12 @@ import {
   CircularProgress,
   Snackbar,
   Alert,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
 import CancelSharpIcon from "@mui/icons-material/CancelSharp";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import CloseIcon from "@mui/icons-material/Close";
 import { dialogStyle } from "../../styles/dialog";
 import theme from "../../styles/theme";
@@ -37,6 +41,14 @@ function Login(props) {
   const [alert, setAlert] = useState(false);
   const [alertText, setAlertText] = useState("");
   const [alertSeverity, setAlertSeverity] = useState("error");
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
   const {
     register,
@@ -164,7 +176,20 @@ function Login(props) {
               <TextField
                 {...register("password")}
                 fullWidth
-                type='password'
+                type={showPassword ? "text" : "password"}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position='end'>
+                      <IconButton
+                        aria-label='toggle password visibility'
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge='end'>
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
                 variant='outlined'
                 id='password'
                 label='Required'

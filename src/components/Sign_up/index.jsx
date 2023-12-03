@@ -12,8 +12,12 @@ import {
   CircularProgress,
   Alert,
   Snackbar,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { dialogStyle } from "../../styles/dialog";
 import React, { useState } from "react";
 import CancelSharpIcon from "@mui/icons-material/CancelSharp";
@@ -51,6 +55,14 @@ function SignUp(props) {
   const [alertSeverity, setAlertSeverity] = useState("error");
 
   const [imageError, setImageError] = useState("");
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
   const handleAddImage = () => {
     const imageInput = document.getElementById("avatar").value;
@@ -101,7 +113,7 @@ function SignUp(props) {
           } else {
             setAlertSeverity("success");
             setAlert(true);
-            setAlertText("Welcome " + res.name);
+            setAlertText("Registration Successful. Please login.");
             setTimeout(() => {
               switchModal();
             }, 3000);
@@ -217,7 +229,20 @@ function SignUp(props) {
               <TextField
                 {...register("password")}
                 fullWidth
-                type='password'
+                type={showPassword ? "text" : "password"}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position='end'>
+                      <IconButton
+                        aria-label='toggle password visibility'
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge='end'>
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
                 variant='outlined'
                 id='password'
                 label='Required'
