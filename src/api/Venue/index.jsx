@@ -12,10 +12,15 @@ function GetVenue(url) {
         setIserror(false);
         const fetchedData = await fetch(url);
         const result = await fetchedData.json();
-        setData(result);
+        if (result.errors) {
+          setIserror(true);
+          setData(result.errors[0]);
+        } else {
+          setData(result);
+        }
       } catch (error) {
-        setData(error);
         setIserror(true);
+        setData(error);
       } finally {
         setIsLoading(false);
       }
