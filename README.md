@@ -1,8 +1,71 @@
-# Getting Started with Holidaze App
+# Holidaze
+![image](https://github.com/Tonix89/project-exam-2-holidaze/assets/100238552/1713a7a7-05fb-4a12-a0bd-fbbf0d173f69)
 
-Holidaze is a venue booking website.
+## Description
+Holidaze is a venue booking website. Users who register as a venue managers can create a venue. Other registered users can book this venue on their chosen dates. This project uses API links provided by Noroff.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### What it does
+  - It can register a user with ``` @stud.noroff.no ``` or ``` noroff.no ``` email domain.
+  - It can log in a registered user.
+  - It can log out a user.
+  - It displays venues using an API call.
+  - It has a look-ahead search function.
+  - It can sort and filter data results from an API call.
+  - It can display a single venue displaying all the details.
+  - It makes bookings.
+  - It can create a venue.
+  - It can edit a venue.
+  - It can delete the venue.
+  - It can edit profile information.
+  - It can view bookings registered in the specific venue.
+  - It displays dates when a venue is available and unavailable.
+  - It displays the venues created by the venue manager user.
+  - It displays the upcoming bookings made by the user.
+  - It displays the past bookings made by the user.
+
+## Built with
+  - [Noroff API](https://docs.noroff.dev/holidaze/authentication)
+  - [Create React App](https://react.dev/)
+  - [Material UI](https://mui.com/)
+  - [React Helmet Async](https://www.npmjs.com/package/react-helmet-async)
+
+## Getting started
+
+ ### Installing
+   1. Clone this repo:
+      ```bash
+      https://github.com/Tonix89/project-exam-2-holidaze.git
+      ```
+   2. Install all dependencies:
+      ```bash
+      npm i
+      ```
+      
+ ### Running
+  1. Run this command to start the development server:
+  
+     ```bash
+     npm run start
+     ```
+Once the command is run, the development server is automatically open in the code editor's default browser.
+See [Other available scripts](#available-scripts) for react development.
+
+## Contributing
+If you wish to contribute to this project, please follow this guidelines:
+  1. Fork the project.
+  2. Create a development branch from ``` master ``` .
+  3. Make some commits to improve the project.
+  4. Make sure to add a commit message in each commit and describe what you did.
+  5. Push the development branch to your ``` master ``` branch.
+  6. Open a Pull Request to the upstream branch.
+  7. Pull Request will be reviewed and merged if applicable.
+
+## Contact
+If you have any question or suggestion, please do not hesitate to contact me here:
+
+[LinkedIn](www.linkedin.com/in/antonio-arabejo-a22524152)
+
+[Facebook](https://www.facebook.com/tonixzz/)
 
 ## Available Scripts
 
