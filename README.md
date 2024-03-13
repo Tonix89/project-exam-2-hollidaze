@@ -24,7 +24,7 @@ Holidaze is a venue booking website. Users who register as a venue managers can 
   - It displays the past bookings made by the user.
 
 ## Built with
-  - [Noroff API](https://docs.noroff.dev/holidaze/authentication)
+  - Noroff API
   - [Create React App](https://react.dev/)
   - [Material UI](https://mui.com/)
   - [React Helmet Async](https://www.npmjs.com/package/react-helmet-async)
@@ -65,7 +65,7 @@ If you have any question or suggestion, please do not hesitate to contact me her
 
 [LinkedIn](www.linkedin.com/in/antonio-arabejo-a22524152)
 
-[Facebook](https://www.facebook.com/tonixzz/)
+[Portfolio](https://tonix.no/)
 
 ## Available Scripts
 
